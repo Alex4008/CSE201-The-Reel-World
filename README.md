@@ -1,5 +1,6 @@
 # CSE201-The-Reel-World
-CSE 201 Group Project Spring 2020
+CSE 201 Group Project
+Spring 2020
 
 # Team Members
 - Rebecca Gruenberg
