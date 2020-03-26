@@ -3,7 +3,7 @@
 
   $sql = new mysqli($host, $user, $password, $database);
 
-  if ($sql_.connect_error != "") {
+  if ($sql->connect_error != "") {
     print $sql->connect_error;
     print "Error Connecting To Database: Did you install the 'password.php' file?"
     die;
