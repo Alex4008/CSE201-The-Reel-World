@@ -1,17 +1,3 @@
-<!--
-<?php
-  require_once("password.php");
-
-  $mysqli = new mysqli($host, $user, $password, $database);
-
-  if ($sql->connect_error != "") {
-    print $mysqli->connect_error;
-    print "Error Connecting To Database: Did you install the 'password.php' file?"
-   // die;
-  }
-
-?>
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
