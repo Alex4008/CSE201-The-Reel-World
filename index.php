@@ -45,9 +45,9 @@
         </span>
       </div>
 
-      <button class="btn btn-danger" type="button" style="margin-left:10px;">SORT</button>
-      <button class="btn btn-danger" type="button" style="margin-left:10px;">FILTER</button>
-      <button class="btn btn-warning" type="button" style="margin-left:10px;">Add A Movie</button>
+      <button class="btn btn-danger" type="button" style="margin:5px;margin-left:10px;">SORT</button>
+      <button class="btn btn-danger" type="button" style="margin:5px; ">FILTER</button>
+      <button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
     </form>
   </div>
 </nav>
