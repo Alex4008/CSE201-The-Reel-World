@@ -1,3 +1,13 @@
+<?php
+	require_once('password.php');
+	$mysqli = mysqli_connect($host, $user, $password, $database);
+	
+	if (mysqli_connect_errno($mysqli)) {
+    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    die;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
