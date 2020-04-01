@@ -1,6 +1,3 @@
-﻿USE MovieCatalog;
-GO
-
 INSERT INTO Users (userName, password, displayName) VALUES ('kcolin0', 'PkuKTwB', 'Kelley Colin');
 INSERT INTO Users (userName, password, displayName) VALUES ('mhillburn1', 'CjrN29ACDpY', 'Maryjane Hillburn');
 INSERT INTO Users (userName, password, displayName) VALUES ('aormonde2', 'RM4bK9l', 'Andie Ormonde');
@@ -54,15 +51,15 @@ INSERT INTO Users (userName, password, displayName) VALUES ('jhaliburn1d', 'QC9v
 
 
 
-INSERT INTO Genres ([description]) VALUES ('Action'),('Animation'),('Children'),('Sci-Fi');
-INSERT INTO Genres ([description]) VALUES ('Drama');
-INSERT INTO Genres ([description]) VALUES ('Adventure'),('Musical'),('Romance'),('Sci-Fi');
-INSERT INTO Genres ([description]) VALUES ('Mystery'),('Thriller');
-INSERT INTO Genres ([description]) VALUES ('Comedy');
-INSERT INTO Genres ([description]) VALUES ('Documentary');
-INSERT INTO Genres ([description]) VALUES ('Crime'),('Drama'),('Romance'),('Fantasy');
-INSERT INTO Genres ([description]) VALUES ('War');
-INSERT INTO Genres ([description]) VALUES ('Western'),('Other');
+INSERT INTO Genres (description) VALUES ('Action'),('Animation'),('Children'),('Sci-Fi');
+INSERT INTO Genres (description) VALUES ('Drama');
+INSERT INTO Genres (description) VALUES ('Adventure'),('Musical'),('Romance'),('Sci-Fi');
+INSERT INTO Genres (description) VALUES ('Mystery'),('Thriller');
+INSERT INTO Genres (description) VALUES ('Comedy');
+INSERT INTO Genres (description) VALUES ('Documentary');
+INSERT INTO Genres (description) VALUES ('Crime'),('Drama'),('Romance'),('Fantasy');
+INSERT INTO Genres (description) VALUES ('War');
+INSERT INTO Genres (description) VALUES ('Western'),('Other');
 
 
 INSERT INTO Requests (userId, requestDate) VALUES (43, '2020-03-04 00:01:08');
@@ -284,10 +281,10 @@ INSERT INTO Actors (requestId, actorName, actorLink) VALUES (118, 'Julia Roberts
 INSERT INTO Actors (requestId, actorName, actorLink) VALUES (183, 'Tamara Hope', 'https://www.imdb.com/name/nm0394045/?ref_=tt_ov_st_sm');
 
 
-INSERT INTO Movies (requestId, title, [description], keywords, imdbLink, [image], imageAddress, rating) VALUES (183, 'September Dawn', 'A love story set during a tense encounter between a wagon train of settlers and a renegade Mormon group.', 'love, romance', 'https://www.imdb.com/title/tt0473700/', NULL, 'https://m.media-amazon.com/images/M/MV5BMTk5MzE0NzM5MV5BMl5BanBnXkFtZTcwODM0NDM0MQ@@._V1_UX182_CR0,0,182,268_AL_.jpg', 5.8);
-INSERT INTO Movies (requestId, title, [description], keywords, imdbLink, [image], imageAddress, rating) VALUES (118, 'Pretty Woman', 'A man in a legal but hurtful business needs an escort for some social events, and hires a beautiful prostitute he meets... only to fall in love.', 'love, romance', 'https://www.imdb.com/title/tt0100405/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BNjk2ODQzNDYxNV5BMl5BanBnXkFtZTgwMTcyNDg4NjE@._V1_UX182_CR0,0,182,268_AL_.jpg', 7.0);
-INSERT INTO Movies (requestId, title, [description], keywords, imdbLink, [image], imageAddress, rating) VALUES (136, 'Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.', 'dream, thief, planting an idea', 'https://www.imdb.com/title/tt0100405/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg', 8.8);
-INSERT INTO Movies (requestId, title, [description], keywords, imdbLink, [image], imageAddress, rating) VALUES (167, 'Out Of Africa', 'In 20th-century colonial Kenya, a Danish baroness/plantation owner has a passionate love affair with a free-spirited big-game hunter.', 'hunter, love affair', 'https://www.imdb.com/title/tt0089755/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BMTc5Y2NiZWQtZGY4YS00NDI4LThhM2ItMDdhYzFlNzY1NmM0XkEyXkFqcGdeQXVyMTA0MjU0Ng@@._V1_UX182_CR0,0,182,268_AL_.jpg', 7.2);
+INSERT INTO Movies (requestId, title, description, keywords, imdbLink, image, imageAddress, rating) VALUES (183, 'September Dawn', 'A love story set during a tense encounter between a wagon train of settlers and a renegade Mormon group.', 'love, romance', 'https://www.imdb.com/title/tt0473700/', NULL, 'https://m.media-amazon.com/images/M/MV5BMTk5MzE0NzM5MV5BMl5BanBnXkFtZTcwODM0NDM0MQ@@._V1_UX182_CR0,0,182,268_AL_.jpg', 5.8);
+INSERT INTO Movies (requestId, title, description, keywords, imdbLink, image, imageAddress, rating) VALUES (118, 'Pretty Woman', 'A man in a legal but hurtful business needs an escort for some social events, and hires a beautiful prostitute he meets... only to fall in love.', 'love, romance', 'https://www.imdb.com/title/tt0100405/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BNjk2ODQzNDYxNV5BMl5BanBnXkFtZTgwMTcyNDg4NjE@._V1_UX182_CR0,0,182,268_AL_.jpg', 7.0);
+INSERT INTO Movies (requestId, title, description, keywords, imdbLink, image, imageAddress, rating) VALUES (136, 'Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.', 'dream, thief, planting an idea', 'https://www.imdb.com/title/tt0100405/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_UX182_CR0,0,182,268_AL_.jpg', 8.8);
+INSERT INTO Movies (requestId, title, description, keywords, imdbLink, image, imageAddress, rating) VALUES (167, 'Out Of Africa', 'In 20th-century colonial Kenya, a Danish baroness/plantation owner has a passionate love affair with a free-spirited big-game hunter.', 'hunter, love affair', 'https://www.imdb.com/title/tt0089755/?ref_=nmls_kf', NULL, 'https://m.media-amazon.com/images/M/MV5BMTc5Y2NiZWQtZGY4YS00NDI4LThhM2ItMDdhYzFlNzY1NmM0XkEyXkFqcGdeQXVyMTA0MjU0Ng@@._V1_UX182_CR0,0,182,268_AL_.jpg', 7.2);
 
 
 INSERT INTO Comments (userId, movieId, commentText) VALUES (20, 1, 'Drainage of Right Carpal Joint, Open Approach');
@@ -311,6 +308,6 @@ INSERT INTO Comments (userId, movieId, commentText) VALUES (41, 4, 'Supplement L
 INSERT INTO Comments (userId, movieId, commentText) VALUES (28, 2, 'Destruction of Right Parietal Bone, Perc Endo Approach');
 INSERT INTO Comments (userId, movieId, commentText) VALUES (13, 4, 'Inspection of Right Lower Leg, Open Approach');
 
-INSERT INTO ActorMovie VALUES (16, 1),(15,2),(5,3),(9,4);
+INSERT INTO ActorMovie(actorId, movieId) VALUES (16, 1),(15,2),(5,3),(9,4);
 
-INSERT INTO GenreMovie VALUES (5,1), (16,1), (20,1), (12,2), (8,2), (6,3), (4,3), (1,3), (8,4), (5,4);
+INSERT INTO GenreMovie(genreId, movieId) VALUES (5,1), (16,1), (20,1), (12,2), (8,2), (6,3), (4,3), (1,3), (8,4), (5,4);
