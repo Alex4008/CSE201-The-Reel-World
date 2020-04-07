@@ -1,11 +1,15 @@
 <?php
+ini_set('display_errors', 1); 
+ini_set('display_startup_errors', 1); 
+error_reporting(E_ALL);
+
 	require_once('password.php');
 	$mysqli = mysqli_connect($host, $user, $password, $database);
 
 	if (mysqli_connect_errno($mysqli)) {
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    die;
-}
+    	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    	die;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +48,6 @@
       <li class="nav-item">
         <a class="nav-link" href="#">My Favorite Movies</a>
       </li>
-
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <div class="input-group">
@@ -81,42 +84,43 @@
   </div>
 </nav>
 
+<?php
+print '<div class="container">'; // Open container
+print '<div class="row">'; // Open first row
+$count = 0; //Variable used to determine if we should switch to a new row
 
-<div class="container">
-  <div class="row">
-    <div class="card col-md" style="margin:5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/-8aFq42ot-4ZlaHU6Mynfr8gprsMGeoePcW_1PuaIbFRdj2IKDAPvTA9Lg9Xx2f_Bpj5cRA=s113" width="190px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Iron Man</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/s25pdxsjC8xQeijNJBIktU8ijdm-alISoncJ96K1WYBNkjcXBZFdNdrBRs4Dzonsy-EsxQ=s85" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Inception</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQHwWe3wC0dtk000Qs61X49aosqqaS3YK2HZT629Tej4WzsM8K1" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Pride & Prejudice</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/D83gtq-Esgz7oL6JHVrKXvdZ-bU4-b7PxBDU0pT5BSC_L-pJ0VPOsA3uPPoTsQ7axsFQgg=s106" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Avengers</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-  </div>
-</div>
+$statement = $mysqli->prepare("SELECT * FROM Movies m ORDER BY m.title;"); //Defining the query
+
+$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted); // Binding the variables
+
+$statement->execute(); // Executing the query
+
+// Loop goes through all of the results from the query
+while($statement->fetch()) {
+	if( $isDeleted == false) { // Do not show if its been deleted
+		
+		if($count == 4) {
+			$count = 0;
+			print '</div>'; // end row
+			print '<div class="row">'; //start new row
+		}
+
+		// Build card 
+		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
+		print '<img src="' . $imageAddress . '" width="190px" height="150px" class="card-img-top" alt="' . $title . '">';
+		print '<div class="card-body">';
+		print '<h5 class="card-title">' . $title . '</h5>';
+		print '<p class="card-text"> Genre: ' . $keywords . ' <br>Description: ' . $description . ' <br>Actors: ' . '*shrug emoji*' . ' <br>Rating: ' . $rating . ' /10</p>';
+		print '<a href="' . $imdbLink . '" class="btn btn-primary">IMDB</a>';
+		print '</div>';
+		print '</div>';
+		$count++;
+	}
+}
+print '</div>'; // Close the ending row
+print '</div>'; // Close the container
+
+?>
+
 </body>
 </html>
