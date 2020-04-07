@@ -45,9 +45,11 @@ error_reporting(E_ALL);
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
+      <!--
       <li class="nav-item">
         <a class="nav-link" href="#">My Favorite Movies</a>
       </li>
+  -->
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <div class="input-group">
