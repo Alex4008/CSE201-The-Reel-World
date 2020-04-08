@@ -130,7 +130,7 @@ while($row = $result->fetch_assoc()) {
 		}
 
 		// Build card 
-		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
+		print '<div class="card col-lg-3" style="margin:5px;padding:0px;border-color:white;">';
 
 		print '<a href="' . $row['imdbLink'] . '">';
 		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
