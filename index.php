@@ -1,15 +1,5 @@
 <?php
-ini_set('display_errors', 1); 
-ini_set('display_startup_errors', 1); 
-error_reporting(E_ALL);
-
-	require_once('password.php');
-	$mysqli = mysqli_connect($host, $user, $password, $database);
-
-	if (mysqli_connect_errno($mysqli)) {
-    	echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    	die;
-	}
+	require 'db.php';
 ?>
 
 <!DOCTYPE html>
@@ -91,14 +81,12 @@ print '<div class="container">'; // Open container
 print '<div class="row">'; // Open first row
 $count = 0; //Variable used to determine if we should switch to a new row
 
-$statement = $mysqli->prepare("SELECT * FROM Movies m ORDER BY m.title;"); //Defining the query
+$statement = getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 
-$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted); // Binding the variables
-
-$statement->execute(); // Executing the query
+$result = $statement->get_result(); // Gets the results from the query
 
 // Loop goes through all of the results from the query
-while($statement->fetch()) {
+while($row = $result->fetch_assoc()) {
 	if( $isDeleted == false) { // Do not show if its been deleted
 		
 		if($count == 4) {
@@ -109,11 +97,15 @@ while($statement->fetch()) {
 
 		// Build card 
 		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
-		print '<img src="' . $imageAddress . '" width="190px" height="150px" class="card-img-top" alt="' . $title . '">';
+
+		print '<a href="' . $row['imdbLink'] . '">';
+		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
+		print '</a>';
+
 		print '<div class="card-body">';
-		print '<h5 class="card-title">' . $title . '</h5>';
-		print '<p class="card-text"> Genre: ' . $keywords . ' <br>Description: ' . $description . ' <br>Actors: ' . '*shrug emoji*' . ' <br>Rating: ' . $rating . ' /10</p>';
-		print '<a href="' . $imdbLink . '" class="btn btn-primary">IMDB</a>';
+		print '<h5 class="card-title">' . $row['title'] . '</h5>';
+		print '<p class="card-text"> Genre: ' . $row['keywords'] . ' <br>Description: ' . $row['description'] . ' <br>Actors: ' . '*shrug emoji*' . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
+		print '<a href="' . $row['imdbLink'] . '" class="btn btn-primary">IMDB</a>';
 		print '</div>';
 		print '</div>';
 		$count++;
