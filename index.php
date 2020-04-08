@@ -32,7 +32,7 @@
 <body style="font-family:Alegreya;background-color:#1e272e;">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="navbar-header">
-    <a class="navbar-brand" href="#">THE REEL WORLD</a>
+    <a class="navbar-brand" href="index.php">THE REEL WORLD</a>
   </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -41,7 +41,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <!--
       <li class="nav-item">
@@ -130,9 +130,8 @@ while($row = $result->fetch_assoc()) {
 		}
 
 		// Build card 
-		print '<div class="card col-lg-3" style="margin:5px;padding:0px;border-color:white;">';
-
-		print '<a href="' . $row['imdbLink'] . '">';
+		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
+		print '<a href= "singleMovie.php?title=' . $row['title'] .'">';
 		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
 		print '</a>';
 
