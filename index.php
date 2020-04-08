@@ -138,7 +138,7 @@ while($row = $result->fetch_assoc()) {
 
 		print '<div class="card-body">';
 		print '<h5 class="card-title">' . $row['title'] . '</h5>';
-		print '<p class="card-text"> Genre: ' . $row['genre'] . ' <br>Description: ' . $row['description'] . ' <br>Actors: ' . '*shrug emoji*' . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
+		print '<p class="card-text"> Genre: ' . $row['genre'] . ' <br>Description: ' . $row['description'] . ' <br>Actors: ' . $row['actors'] . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
 		print '<a href="' . $row['imdbLink'] . '" class="btn btn-primary">IMDB</a>';
 		print '</div>';
 		print '</div>';
