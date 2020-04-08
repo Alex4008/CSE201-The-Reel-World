@@ -27,4 +27,30 @@
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
 	}
+
+    function getAllGenres() {
+        $statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Genres;"); 
+        //Defining the query
+		$statement->bind_result($genreId, $description, $isDeleted); // Binding the variables
+		$statement->execute(); // Executing the query
+		return $statement; // Return the results from the query
+    }
+
+    function getCheckedGenres($genreList) {
+        
+        $sql = "SELECT MAX(m.title), m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, g.isDeleted gDeleted 
+        FROM Movies m 
+        JOIN GenreMovie gm ON m.movieId = gm.movieId 
+        JOIN Genres g ON g.genreId = gm.genreId
+        WHERE g.description IN ('" . implode("','", $genreList) . "')
+        GROUP BY m.title;";
+        
+        if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
+            echo "prepare fail" . $mysqli->error;
+        }
+        //Defining the query
+		$statement->bind_result($title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $gDeleted ); // Binding the variables
+		$statement->execute(); // Executing the query
+		return $statement; // Return the results from the query
+    }
 ?>
