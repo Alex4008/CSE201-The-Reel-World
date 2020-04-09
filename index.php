@@ -1,11 +1,13 @@
 <?php
-	require_once('password.php');
-	$mysqli = mysqli_connect($host, $user, $password, $database);
-	
-	if (mysqli_connect_errno($mysqli)) {
-    echo "Failed to connect to MySQL: " . mysqli_connect_error();
-    die;
-}
+	require 'db.php';
+
+    // Printing POST for debugging
+//    echo("<p style='color:white;'>POST=</p>");
+//    foreach ($_POST as $element) {
+//        echo("<p style='color:white;'>");
+//         print_r($element);
+//        echo("</p>");
+//    }
 ?>
 
 <!DOCTYPE html>
@@ -20,11 +22,17 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
+	<style>
+		.left-align {
+			position: abosolute;
+			left: 5px;
+		}
+	</style>
 </head>
 <body style="font-family:Alegreya;background-color:#1e272e;">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="navbar-header">
-    <a class="navbar-brand" href="#">THE REEL WORLD</a>
+    <a class="navbar-brand" href="index.php">THE REEL WORLD</a>
   </div>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -33,14 +41,15 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
+      <!--
       <li class="nav-item">
         <a class="nav-link" href="#">My Favorite Movies</a>
       </li>
-
+  -->
     </ul>
-    <form class="form-inline my-2 my-lg-0">
+    <form class="form-inline my-2 my-lg-0" method="post">
       <div class="input-group">
         <input type="text" class="form-control" placeholder="Search...">
         <span class="input-group-btn">
@@ -48,49 +57,97 @@
         </span>
       </div>
 
-      <button class="btn btn-danger" type="button" style="margin:5px;margin-left:10px;">SORT</button>
-      <button class="btn btn-danger" type="button" style="margin:5px; ">FILTER</button>
+      <input class="btn btn-danger" type="submit" name="sortBtn" style="margin:5px;margin-left:10px;" value="SORT">
+      <div class="btn-group">
+          <button type="button" class="btn btn-danger">FILTER</button>
+          <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu bg-secondary text-light">
+              <div class="font-weight-bold" style="margin-left:10px;">By Genre</div>
+                <form class="px-4 py-3 rounded" id="filterOptions" method="post">
+                    <!-- Populates options based on the Genres table -->
+<?php
+// get all genres for filter
+$statement = getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
+
+$result = $statement->get_result(); // Gets the results from the query
+$i = 0;
+                    
+// Loop goes through all of the results from the query
+while($row = $result->fetch_assoc()) {
+    if( $isDeleted == false) { // Do not show if its been deleted
+
+        // Build list  
+        print '<div class="form-group" style="margin-left:10px;">';
+        print '<input type="checkbox" class="form-check-input" id="' . $row['description'] . '" value="' . $row['description'] . '" name="genre[' . $i . ']">';
+        print '<label for="' . $row['description'] . '">' . $row['description'] . '</label>';
+        print '</div>';        
+        $i++;
+    }
+}
+?>   
+				    <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
+				  </form>
+			  </div>
+        </div>
       <button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
     </form>
   </div>
 </nav>
 
+<?php
+print '<div class="container">'; // Open container
+print '<div class="row">'; // Open first row
+$count = 0; //Variable used to determine if we should switch to a new row
+$selectedGenre = null;
+    
+function getPostGenres() {
+    $arr = null;
+    if(isset($_POST['genre'])) {
+        $arr = $_POST['genre'];
+//        print_r($arr);
+    }
+    return($arr);
+}
+$selectedGenre = getPostGenres();
 
-<div class="container">
-  <div class="row">
-    <div class="card col-md" style="margin:5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/-8aFq42ot-4ZlaHU6Mynfr8gprsMGeoePcW_1PuaIbFRdj2IKDAPvTA9Lg9Xx2f_Bpj5cRA=s113" width="190px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Iron Man</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/s25pdxsjC8xQeijNJBIktU8ijdm-alISoncJ96K1WYBNkjcXBZFdNdrBRs4Dzonsy-EsxQ=s85" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Inception</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQHwWe3wC0dtk000Qs61X49aosqqaS3YK2HZT629Tej4WzsM8K1" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Pride & Prejudice</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-    <div class="card col-md" style="margin: 5px;padding:0px;border-color:#000000;">
-      <img src="https://lh3.googleusercontent.com/D83gtq-Esgz7oL6JHVrKXvdZ-bU4-b7PxBDU0pT5BSC_L-pJ0VPOsA3uPPoTsQ7axsFQgg=s106" width="150px" height="150px" class="card-img-top" alt="Iron Man">
-      <div class="card-body">
-        <h5 class="card-title">Avengers</h5>
-        <p class="card-text">Genre: <br>Briefing:  <br>Actors:  <br>Rating: _/10</p>
-        <a href="#" class="btn btn-primary">IMDB</a>
-      </div>
-    </div>
-  </div>
-</div>
+if ($selectedGenre == null)
+    $statement = getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
+else 
+    $statement = getCheckedGenres($selectedGenre);
+
+$result = $statement->get_result(); // Gets the results from the query
+
+// Loop goes through all of the results from the query
+while($row = $result->fetch_assoc()) { 
+	if( $isDeleted == false) { // Do not show if its been deleted
+		
+		if($count == 4) {
+			$count = 0;
+			print '</div>'; // end row
+			print '<div class="row">'; //start new row
+		}
+
+		// Build card 
+		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
+		print '<a href= "singleMovie.php?title=' . $row['title'] .'">';
+		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
+		print '</a>';
+
+		print '<div class="card-body">';
+		print '<h5 class="card-title">' . $row['title'] . '</h5>';
+		print '<p class="card-text"> Genre: ' . $row['genre'] . ' <br>Description: ' . $row['description'] . ' <br>Actors: ' . $row['actors'] . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
+		print '<a href="' . $row['imdbLink'] . '" class="btn btn-primary">IMDB</a>';
+		print '</div>';
+		print '</div>';
+		$count++;
+	}
+}
+print '</div>'; // Close the ending row
+print '</div>'; // Close the container
+
+?>
+
 </body>
 </html>
