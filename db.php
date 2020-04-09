@@ -22,7 +22,7 @@
 	*/
 
 	function getAllMovies() {
-		$statement = $GLOBALS['mysqli']->prepare("SELECT m.movieId, m.requestId, MAX(m.title), m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
+		$statement = $GLOBALS['mysqli']->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
 			FROM Movies m 
 			JOIN GenreMovie gm ON gm.movieId = m.movieId 
 			JOIN Genres g ON g.genreId = gm.genreId 
