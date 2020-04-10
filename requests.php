@@ -17,14 +17,11 @@
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
 
 	<style>
-		.left-align {
-			position: abosolute;
-			left: 5px;
-		}
-
-		.align-right {
-			position: abosolute;
-			right: 5px;
+		#message {
+			text-align: center;
+			margin:0 auto;
+			margin-top:20px;
+			color: white;
 		}
 	</style>
 	<script src="script.js"></script>
@@ -51,7 +48,13 @@
 		</nav>
 
 		<div class=".container">
-
+			<?php
+				if (!isset($_SESSION['loggedIn'])) {
+					print '<div id="message">Please log in <a href="login.php">here</a>.</div>';
+				} else {
+					//show request list
+				}
+			?>
 		</div>
 	</body>
 <html>

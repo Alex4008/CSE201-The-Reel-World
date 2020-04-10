@@ -29,6 +29,12 @@
     button {
       margin: 10px 0 0 0;
     }
+
+    .errorMessage {
+      padding:20px;
+      margin: 0 auto;
+      color:red;
+    }
 	</style>
 	<script src="script.js"></script>
 </head>
@@ -64,12 +70,26 @@
                 <p>Don't have an account? Sign up <a href='#'>here</a>.</p>
                 <div class="text-right"><button type="submit" class="btn btn-danger">Login</button></div>
           </form>
+          <?php
+            if (isset($_POST['userName']) && isset($_POST['password'])) {
+              $result = login($_POST['userName'], $_POST['password']) -> get_result();
+              $count = 0;
+              while($row = $result->fetch_assoc()) {
+                $_SESSION['userId'] = $row['userId'];
+                $_SESSION['userName'] = $row['userName'];
+                $_SESSION['displayName'] = $row['displayName'];
+                $count += 1;
+              }
+
+              if ($count === 1) {
+                $_SESSION['loggedIn'] = true;
+                header("Location: /index.php "); //Go back to index after loggedIn
+              } else {
+                print('<div class="errorMessage">No such user found. Please try again.</div>');
+              }
+            }
+          ?>
   		</div>
     </div>
-    <?php
-      if (isset($_POST['userName']) && isset($_POST['password'])) {
-        
-      }
-    ?>
 	</body>
 <html>
