@@ -22,11 +22,11 @@
 	*/
 
 	function getAllMovies() {
-		$statement = $GLOBALS['mysqli']->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
-			FROM Movies m 
-			JOIN GenreMovie gm ON gm.movieId = m.movieId 
-			JOIN Genres g ON g.genreId = gm.genreId 
-			GROUP BY m.title 
+		$statement = $GLOBALS['mysqli']->prepare("SELECT m.movieId, m.requestId, m.title, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors
+			FROM Movies m
+			JOIN GenreMovie gm ON gm.movieId = m.movieId
+			JOIN Genres g ON g.genreId = gm.genreId
+			GROUP BY m.title
 			ORDER BY m.title;"); //Defining the query
 		$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors); // Binding the variablesX()
 		$statement->execute(); // Executing the query
@@ -34,7 +34,7 @@
 	}
 
     function getAllGenres() {
-        $statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Genres;"); 
+        $statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Genres;");
         //Defining the query
 		$statement->bind_result($genreId, $description, $isDeleted); // Binding the variables
 		$statement->execute(); // Executing the query
@@ -42,20 +42,38 @@
     }
 
     function getCheckedGenres($genreList) {
-        
-        $sql = "SELECT MAX(m.title), m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted 
+
+        $sql = "SELECT m.movieId, m.title, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
 	FROM Movies m
-        JOIN GenreMovie gm ON m.movieId = gm.movieId 
+        JOIN GenreMovie gm ON m.movieId = gm.movieId
         JOIN Genres g ON g.genreId = gm.genreId
         WHERE g.description IN ('" . implode("','", $genreList) . "')
         GROUP BY m.title;";
-        
+
         if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
             echo "prepare fail" . $mysqli->error;
         }
         //Defining the query
-		$statement->bind_result($title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors, $gDeleted ); // Binding the variables
+		$statement->bind_result($movieId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors, $gDeleted ); // Binding the variables
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
     }
+
+		function sortMovies($movieIds) {
+			$sql = "SELECT m.movieId, m.title, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
+FROM Movies m
+			JOIN GenreMovie gm ON m.movieId = gm.movieId
+			JOIN Genres g ON g.genreId = gm.genreId
+			WHERE m.movieId IN (' .$movieIds .')
+			GROUP BY m.title
+			ORDER BY m.title;";
+
+			if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
+					echo "prepare fail" . $mysqli->error;
+			}
+			//Defining the query
+			$statement->bind_result($movieId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors, $gDeleted ); // Binding the variables
+			$statement->execute(); // Executing the query
+			return $statement; // Return the results from the query
+		}
 ?>

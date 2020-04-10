@@ -22,12 +22,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
+
 	<style>
 		.left-align {
 			position: abosolute;
 			left: 5px;
 		}
+
+		.align-right {
+			position: abosolute;
+			right: 5px;
+		}
 	</style>
+	<script src="script.js"></script>
 </head>
 <body style="font-family:Alegreya;background-color:#1e272e;">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -41,65 +48,76 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">HOME <span class="sr-only">(current)</span></a>
       </li>
-      <!--
-      <li class="nav-item">
-        <a class="nav-link" href="#">My Favorite Movies</a>
-      </li>
-  -->
     </ul>
-    <form class="form-inline my-2 my-lg-0" method="post">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" style="background-color:#c0c3c5;color:#053560;">GO</button>
-        </span>
-      </div>
+		<div class="navbar-nav mr-auto w-100 order-3">
+			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search...">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;">GO</button>
+					</span>
+				</div>
+				<div class="btn-group" style="margin:5px;margin-left:10px;">
+				  <button type="button" class="btn btn-danger" onclick="sortFunction()" id="sortButton" name="sortButton" value="SORT">SORT</button>
+				  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    <span class="sr-only">Toggle Dropdown</span>
+				  </button>
+				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;">
+				    <li value="titleSort"><a class="dropdown-item" href="index.php">By title</a></li>
+				    <li value="ratingSort"><a class="dropdown-item" href="index.php">By rating</a></li>
+				  </ul>
+				</div>
+				<script>
+					function sortFunction()  {
+					alert("sorting...");
+					}
+				</script>
+				<div class="btn-group">
+						<button type="button" class="btn btn-danger">FILTER</button>
+						<button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<div class="dropdown-menu bg-secondary text-light">
+								<div class="font-weight-bold" style="margin-left:10px;">By Genre</div>
+									<form class="px-4 py-3 rounded" id="filterOptions" method="post">
+											<!-- Populates options based on the Genres table -->
+	<?php
+	// get all genres for filter
+	$statement = getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
 
-<div class="btn-group">	
-      <button class="btn btn-danger" onclick="sortFunction()" style="margin:5px;margin-left:10px;">Sort</button>
-<script>
-function sortFunction()  {
-alert("sorting...");
-}
-</div>
+	$result = $statement->get_result(); // Gets the results from the query
+	$i = 0;
 
-      <div class="btn-group">
-          <button type="button" class="btn btn-danger">FILTER</button>
-          <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu bg-secondary text-light">
-              <div class="font-weight-bold" style="margin-left:10px;">By Genre</div>
-                <form class="px-4 py-3 rounded" id="filterOptions" method="post">
-                    <!-- Populates options based on the Genres table -->
-<?php
-// get all genres for filter
-$statement = getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
+	// Loop goes through all of the results from the query
+	while($row = $result->fetch_assoc()) {
+			if( $row['isDeleted'] == false) { // Do not show if its been deleted
 
-$result = $statement->get_result(); // Gets the results from the query
-$i = 0;
-                    
-// Loop goes through all of the results from the query
-while($row = $result->fetch_assoc()) {
-    if( $isDeleted == false) { // Do not show if its been deleted
-
-        // Build list  
-        print '<div class="form-group" style="margin-left:10px;">';
-        print '<input type="checkbox" class="form-check-input" id="' . $row['description'] . '" value="' . $row['description'] . '" name="genre[' . $i . ']">';
-        print '<label for="' . $row['description'] . '">' . $row['description'] . '</label>';
-        print '</div>';        
-        $i++;
-    }
-}
-?>   
-				    <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
-				  </form>
-			  </div>
-        </div>
-      <button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
-    </form>
+					// Build list
+					print '<div class="form-group" style="margin-left:10px;">';
+					print '<input type="checkbox" class="form-check-input" id="' . $row['description'] . '" value="' . $row['description'] . '" name="genre[' . $i . ']">';
+					print '<label for="' . $row['description'] . '">' . $row['description'] . '</label>';
+					print '</div>';
+					$i++;
+			}
+	}
+	?>
+							<button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
+						</form>
+					</div>
+					</div>
+				<button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
+			</form>
+			<ul class="navbar-nav">
+					<li class="nav-item">
+							<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+					</li>
+					<li class="nav-item">
+							<a class="nav-link" href="#"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+					</li>
+			</ul>
+	  </div>
   </div>
 </nav>
 
@@ -108,36 +126,47 @@ print '<div class="container">'; // Open container
 print '<div class="row">'; // Open first row
 $count = 0; //Variable used to determine if we should switch to a new row
 $selectedGenre = null;
-    
+
 function getPostGenres() {
     $arr = null;
     if(isset($_POST['genre'])) {
         $arr = $_POST['genre'];
-//        print_r($arr);
+				print('<script>console.log('.json_encode($arr, JSON_HEX_TAG).')</script>');
     }
     return($arr);
 }
 $selectedGenre = getPostGenres();
+$moviesToSort = $_REQUEST['movieIds'];
+print('<script>console.log('.$moviesToSort.');</script>');
 
-if ($selectedGenre == null)
+if (!isset($_POST['genre']) && !isset($_REQUEST['movieIds']))
     $statement = getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
-else 
+else if (isset($_POST['genre'])) {
     $statement = getCheckedGenres($selectedGenre);
+}
+
+if (isset($_REQUEST['movieIds'])) {
+		print('<script>console.log("Here");</script>');
+		$moviesToSort = $_REQUEST['movieIds'];
+
+		$statement = sortMovies($moviesToSort);
+}
+
 
 $result = $statement->get_result(); // Gets the results from the query
 
 // Loop goes through all of the results from the query
-while($row = $result->fetch_assoc()) { 
+while($row = $result->fetch_assoc()) {
 	if( $isDeleted == false) { // Do not show if its been deleted
-		
+
 		if($count == 4) {
 			$count = 0;
 			print '</div>'; // end row
 			print '<div class="row">'; //start new row
 		}
 
-		// Build card 
-		print '<div class="card col-md" style="margin:5px;padding:0px;border-color:white;">';
+		// Build card
+		print '<div class="card col-md movie" movieId="'.$row['movieId'].'" style="margin:5px;padding:0px;border-color:white;">';
 		print '<a href= "singleMovie.php?title=' . $row['title'] .'">';
 		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
 		print '</a>';
