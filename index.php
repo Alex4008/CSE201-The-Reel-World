@@ -1,5 +1,6 @@
 <?php
 	require 'db.php';
+	session_start();
 
     // Printing POST for debugging
 //    echo("<p style='color:white;'>POST=</p>");
@@ -48,10 +49,13 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="index.php">HOME <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home<span class="sr-only">(current)</span></a>
+      </li>
+			<li class="nav-item">
+        <a class="nav-link" href="requests.php">My Requests</a>
       </li>
     </ul>
-		<div class="navbar-nav mr-auto w-100 order-3">
+		<div class="navbar-nav ml-auto w-60 order-3">
 			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
 				<div class="input-group">
 					<input type="text" class="form-control" placeholder="Search...">
@@ -59,14 +63,15 @@
 						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;">GO</button>
 					</span>
 				</div>
+				<div>
 				<div class="btn-group" style="margin:5px;margin-left:10px;">
-				  <button type="button" class="btn btn-danger" onclick="sortFunction()" id="sortButton" name="sortButton" value="SORT">SORT</button>
+				  <button type="button" class="btn btn-danger" id="sortButton" name="sortButton" value="SORT">SORT</button>
 				  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    <span class="sr-only">Toggle Dropdown</span>
 				  </button>
-				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;">
-				    <li value="titleSort"><a class="dropdown-item" href="index.php">By title</a></li>
-				    <li value="ratingSort"><a class="dropdown-item" href="index.php">By rating</a></li>
+				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="sortOptions">
+				    <li class="dropdown-item" value="titleSort">By title</li>
+				    <li class="dropdown-item" value="ratingSort">By rating</li>
 				  </ul>
 				</div>
 				<script>
@@ -109,16 +114,18 @@
 					</div>
 				<button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
 			</form>
+			</div>
 			<ul class="navbar-nav">
 					<li class="nav-item">
 							<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
 					</li>
 					<li class="nav-item">
-							<a class="nav-link" href="#"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+							<a class="nav-link" href="login.php"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
 					</li>
 			</ul>
 	  </div>
   </div>
+
 </nav>
 
 <?php
@@ -131,27 +138,17 @@ function getPostGenres() {
     $arr = null;
     if(isset($_POST['genre'])) {
         $arr = $_POST['genre'];
-				print('<script>console.log('.json_encode($arr, JSON_HEX_TAG).')</script>');
+
     }
     return($arr);
 }
 $selectedGenre = getPostGenres();
-$moviesToSort = $_REQUEST['movieIds'];
-print('<script>console.log('.$moviesToSort.');</script>');
 
-if (!isset($_POST['genre']) && !isset($_REQUEST['movieIds']))
+if (!isset($_POST['genre']) && !isset($_POST['movieIds']))
     $statement = getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 else if (isset($_POST['genre'])) {
     $statement = getCheckedGenres($selectedGenre);
 }
-
-if (isset($_REQUEST['movieIds'])) {
-		print('<script>console.log("Here");</script>');
-		$moviesToSort = $_REQUEST['movieIds'];
-
-		$statement = sortMovies($moviesToSort);
-}
-
 
 $result = $statement->get_result(); // Gets the results from the query
 
