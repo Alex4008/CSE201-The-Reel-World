@@ -50,11 +50,12 @@
 		<div class=".container">
 			<?php
 				if (!isset($_SESSION['loggedIn'])) {
-					print '<div id="message">Please log in <a href="login.php">here</a>.</div>';
+					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
 				} else {
 					//show request list
 				}
 			?>
+			<?php include 'login.php' ?>
 		</div>
 	</body>
 <html>

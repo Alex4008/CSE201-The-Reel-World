@@ -34,6 +34,11 @@
 			position: abosolute;
 			right: 5px;
 		}
+
+		a:link, a:visited {
+			text-decoration: none;
+			color:black;
+		}
 	</style>
 	<script src="script.js"></script>
 </head>
@@ -112,7 +117,7 @@
 						</form>
 					</div>
 					</div>
-				<button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
+				<button class="btn btn-warning" type="button" style="margin:5px; "><a href="addrequest.php">Add A Movie</a></button>
 			</form>
 			</div>
 			<ul class="navbar-nav">
@@ -120,14 +125,13 @@
 							<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
 					</li>
 					<li class="nav-item">
-							<a class="nav-link" href="login.php"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+							<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
 					</li>
 			</ul>
 	  </div>
   </div>
-
 </nav>
-
+<?php include 'login.php' ?>
 <?php
 print '<div class="container">'; // Open container
 print '<div class="row">'; // Open first row
