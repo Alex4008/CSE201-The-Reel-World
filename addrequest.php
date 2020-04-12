@@ -68,7 +68,7 @@
     <div class=".container ">
       <?php
 				if (!isset($_SESSION['loggedIn'])) {
-					print '<div id="message">Please log in <a href="login.php">here</a>.</div>';
+					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
 				} else {
 					$content ='<div class="col-lg-4 holder">';
           $content = $content.'
@@ -86,6 +86,7 @@
           print $content;
 				}
 			?>
+      <?php include 'login.php' ?>
     </div>
   </body>
 </html>
