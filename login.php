@@ -1,6 +1,5 @@
 <?php
-  require 'db.php';
-  session_start();
+  require_once 'db.php';
 ?>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
