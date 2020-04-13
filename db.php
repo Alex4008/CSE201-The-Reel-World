@@ -36,11 +36,19 @@
     function getAllGenres() {
         $statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Genres;");
         //Defining the query
-		$statement->bind_result($genreId, $description, $isDeleted); // Binding the variables
-		$statement->execute(); // Executing the query
-		return $statement; // Return the results from the query
+				$statement->bind_result($genreId, $description, $isDeleted); // Binding the variables
+				$statement->execute(); // Executing the query
+				return $statement; // Return the results from the query
     }
 
+		function getAllActors() {
+			$statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Actors;");
+			//Defining the query
+			$statement->bind_result($actorId, $requestId, $actorName, $actorLink, $isDeleted); // Binding the variables
+			$statement->execute(); // Executing the query
+			return $statement; // Return the results from the query
+		}
+		
     function getCheckedGenres($genreList) {
 
         $sql = "SELECT m.movieId, m.title, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
@@ -60,15 +68,16 @@
     }
 
 		function login($userName, $password) {
-			$sql = "SELECT u.userId, u.userName, u.displayName
+			$sql = "SELECT u.userId, u.userName, u.displayName, r.roleName
 							FROM Users u
+								JOIN Roles r ON u.roleId	= r.roleId
 							WHERE u.userName = '".$userName."' AND u.password='".$password."' AND isDeleted=0;";
 
 			if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
 					echo "prepare fail" . $mysqli->error;
 			}
 			//Defining the query
-			$statement->bind_result($userId, $userName, $displayName); // Binding the variables
+			$statement->bind_result($userId, $userName, $displayName, $roleName); // Binding the variables
 			$statement->execute(); // Executing the query
 			return $statement; // Return the results from the query
 		}
