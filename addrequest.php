@@ -117,22 +117,20 @@
           $content = $content.'</select>
                     </div>
                     <p style="margin-top:7px;">Your movie genres not found?
-                      <button class="btn btn-danger btn-sm" id="addNewGenre">
+                      <button type="button" class="btn btn-danger btn-sm" id="addNewGenre">
                         Add new genres
                       </button>
                     </p>
                   </div>
                 </div>
-                <div id="addGenreField" style="display:none;">
+                <div id="addGenreField">
                   <label>New Genres</label>
                   <div class = "row">
-                    <div class="form-group col-lg-12">
-                      <div class="input-group">
-                        <input type="text" name="newGenreDescription[]" class="form-control" placeholder="New genre\'s name" required/>
-                        <div class="input-group-append">
-                          <button class="btn btn-danger" id="addLineGenre"><i class="fa fa-plus"></i></button>
-                        </div>
-                      </div>
+                    <div class="form-group col-lg-11">
+                        <input type="text" name="newGenreDescription[]" class="form-control" placeholder="New genre\'s name"/>
+                    </div>
+                    <div class="form-group col-lg-1">
+                          <button type="button" class="btn btn-danger" id="addLineGenre"><i class="fa fa-plus"></i></button>
                     </div>
                   </div>
                 </div>
@@ -161,13 +159,13 @@
           $content = $content.'</select>
                     </div>
                     <p style="margin-top: 7px;">Your actors not found?
-                      <a href="#" class="btn btn-danger btn-sm">
+                      <button type="button" class="btn btn-danger btn-sm" id="addNewActor">
                         Add new actors
-                      </a>
+                      </button>
                     </p>
                   </div>
                 </div>
-                <div id="addActorField" style="margin-bottom:20px;display:none;">
+                <div id="addActorField" style="margin-bottom:20px;">
                   <div class="row">
                     <div class="col-lg-5">
                       <label>Actor\'s Name</label>
@@ -176,15 +174,15 @@
                       <label>Actor\'s IMBd Link</label>
                     </div>
                   </div>
-                  <div class = "row">
+                  <div class = "row" style="margin-bottom:10px;">
                     <div class="col-lg-5">
-                      <input type="text" name="newActorName[]" class="form-control" placeholder="New actor\'s name"/ required>
+                      <input type="text" name="newActorName[]" class="form-control" placeholder="New actor\'s name" />
                     </div>
                     <div class="col-lg-6">
-                      <input type="text" name="newActorLink[]" class="form-control" placeholder="New actor\'s link"/ required>
+                      <input type="text" name="newActorLink[]" class="form-control" placeholder="New actor\'s link" />
                     </div>
                     <div class="col-lg-1">
-                      <button class="btn btn-danger" id="addLineActor"><i class="fa fa-plus"></i></button>
+                      <button type="button" class="btn btn-danger" id="addLineActor"><i class="fa fa-plus"></i></button>
                     </div>
                   </div>
                 </div>
@@ -201,8 +199,7 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <button type="button" class="btn btn-warning mainButton" id="saveButton">Save</button>
-                  <button type="button" class="btn btn-danger mainButton" id="submitButton">Submit</button>
+                  <button type="submit" class="btn btn-danger mainButton" id="submitButton">Submit</button>
                   <button type="reset" class="btn btn-secondary mainButton">Cancel</button>
                 </div>
           </form>';
@@ -212,6 +209,11 @@
 			?>
       <?php include 'login.php' ?>
     </div>
-    <script src="multiselect.min.js"></script>
+    <?php
+      if (isset($_POST['movieTitle'])) {
+        print('<script>console.log("here")</script>');
+        print('<script>console.log("'.json_encode($_POST, JSON_HEX_TYPE).'")</script>');
+      }
+    ?>
   </body>
 </html>
