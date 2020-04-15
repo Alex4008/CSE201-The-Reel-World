@@ -1,7 +1,6 @@
 <?php
 	// Load passwords
 	require_once('password.php');
-	session_start();
 
 	// Connect to DB
 	$mysqli = mysqli_connect($host, $user, $password, $database);
@@ -22,63 +21,52 @@
 	- Alex
 	*/
 
-	function getAllMovies() {
-		$statement = $GLOBALS['mysqli']->prepare("SELECT m.movieId, m.requestId, m.title, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors
-			FROM Movies m
-			JOIN GenreMovie gm ON gm.movieId = m.movieId
-			JOIN Genres g ON g.genreId = gm.genreId
-			GROUP BY m.title;"); //Defining the query
+final class MovieManager
+{
+    private $mysqli;
+    
+    public function __construct($mysqli_conn)
+    {
+        $this->mysqli = $mysqli_conn;
+    }
+    
+    public function getAllMovies() {
+		$statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
+			FROM Movies m 
+			JOIN GenreMovie gm ON gm.movieId = m.movieId 
+			JOIN Genres g ON g.genreId = gm.genreId 
+			GROUP BY m.title 
+			ORDER BY m.title;"); //Defining the query
 		$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors); // Binding the variablesX()
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
 	}
-
-    function getAllGenres() {
-        $statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Genres;");
+    
+    public function getAllGenres() {
+        $statement = $this->mysqli->prepare("SELECT DISTINCT description FROM Genres;"); 
         //Defining the query
-				$statement->bind_result($genreId, $description, $isDeleted); // Binding the variables
-				$statement->execute(); // Executing the query
-				return $statement; // Return the results from the query
+		$statement->bind_result($description); // Binding the variables
+		$statement->execute(); // Executing the query
+		return $statement; // Return the results from the query
     }
 
-		function getAllActors() {
-			$statement = $GLOBALS['mysqli']->prepare("SELECT * FROM Actors;");
-			//Defining the query
-			$statement->bind_result($actorId, $requestId, $actorName, $actorLink, $isDeleted); // Binding the variables
-			$statement->execute(); // Executing the query
-			return $statement; // Return the results from the query
-		}
-		
-    function getCheckedGenres($genreList) {
-
-        $sql = "SELECT m.movieId, m.title, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
-				FROM Movies m
-        JOIN GenreMovie gm ON m.movieId = gm.movieId
+    public function getCheckedGenres($genreList) {
+        
+        $sql = "SELECT MAX(m.title), m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted 
+        FROM Movies m
+        JOIN GenreMovie gm ON m.movieId = gm.movieId 
         JOIN Genres g ON g.genreId = gm.genreId
         WHERE g.description IN ('" . implode("','", $genreList) . "')
         GROUP BY m.title;";
-
-        if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
+        
+        if (!($statement = $this->mysqli->prepare($sql))) {
             echo "prepare fail" . $mysqli->error;
         }
         //Defining the query
-				$statement->bind_result($movieId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors, $gDeleted ); // Binding the variables
-				$statement->execute(); // Executing the query
-				return $statement; // Return the results from the query
+		$statement->bind_result($title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors, $gDeleted ); // Binding the variables
+		$statement->execute(); // Executing the query
+		return $statement; // Return the results from the query
     }
+}
 
-		function login($userName, $password) {
-			$sql = "SELECT u.userId, u.userName, u.displayName, r.roleName
-							FROM Users u
-								JOIN Roles r ON u.roleId	= r.roleId
-							WHERE u.userName = '".$userName."' AND u.password='".$password."' AND isDeleted=0;";
-
-			if (!($statement = $GLOBALS['mysqli']->prepare($sql))) {
-					echo "prepare fail" . $mysqli->error;
-			}
-			//Defining the query
-			$statement->bind_result($userId, $userName, $displayName, $roleName); // Binding the variables
-			$statement->execute(); // Executing the query
-			return $statement; // Return the results from the query
-		}
 ?>

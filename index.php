@@ -2,6 +2,8 @@
 	require 'db.php';
 	session_start();
 
+    $movieManager = new MovieManager($mysqli);
+
     // Printing POST for debugging
 //    echo("<p style='color:white;'>POST=</p>");
 //    foreach ($_POST as $element) {
@@ -95,7 +97,7 @@
 											<!-- Populates options based on the Genres table -->
 	<?php
 	// get all genres for filter
-	$statement = getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
+	$statement = $movieManager->getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
 
 	$result = $statement->get_result(); // Gets the results from the query
 	$i = 0;
@@ -149,9 +151,9 @@ function getPostGenres() {
 $selectedGenre = getPostGenres();
 
 if (!isset($_POST['genre']) && !isset($_POST['movieIds']))
-    $statement = getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
+    $statement = $movieManager->getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 else if (isset($_POST['genre'])) {
-    $statement = getCheckedGenres($selectedGenre);
+    $statement = $movieManager->getCheckedGenres($selectedGenre);
 }
 
 $result = $statement->get_result(); // Gets the results from the query
