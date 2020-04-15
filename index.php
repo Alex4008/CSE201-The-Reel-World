@@ -76,16 +76,23 @@
 				  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    <span class="sr-only">Toggle Dropdown</span>
 				  </button>
-				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="sortOptions">
-				    <li class="dropdown-item" value="titleSort">By title</li>
-				    <li class="dropdown-item" value="ratingSort">By rating</li>
+				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="classSortOptions">
+                    <div class="font-weight-bold" style="margin-left:10px;">Sort</div>
+                    <form class="px-4 py-3 rounded" id="sortOptions" method="post">
+                        
+                    <div class="form-group" style="margin-left:10px;">
+                     <input type="checkbox" class="form-check-input" id="By title" value="By title" name="sortTitle">  
+                    <label for="By title">By title</label>
+                        </div>
+                    <div class="form-group" style="margin-left:10px;">
+                      <input type="checkbox" class="form-check-input" id="By rating" value="By rating" name="sortRating">
+                        <label for="By rating">By rating</label>
+                        </div>
+                        <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
+                      </form>
 				  </ul>
 				</div>
-				<script>
-					function sortFunction()  {
-					alert("sorting...");
-					}
-				</script>
+
 				<div class="btn-group">
 						<button type="button" class="btn btn-danger">FILTER</button>
 						<button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -148,16 +155,33 @@ function getPostGenres() {
     }
     return($arr);
 }
+
+//function getSorted($result) {
+//    $resultArr = array();
+//    while($row = $result->fetch_assoc()) {
+////        if($isDeleted == false) {
+//            $arr = array($row["movieId"], $row["title"], $row["imageAddress"], $row["genre"], $row["description"], $row["actors"], $row["rating"], $row["imdbLink"]);
+//            array_push($resultArr, $arr);  
+////        }
+//    }
+//    return $result;
+//}
 $selectedGenre = getPostGenres();
 
-if (!isset($_POST['genre']) && !isset($_POST['movieIds']))
+if (!isset($_POST['genre']) && !isset($_POST['movieIds']) && !isset($_POST['sortTitle']) && !isset($_POST['sortRating']))
     $statement = $movieManager->getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 else if (isset($_POST['genre'])) {
     $statement = $movieManager->getCheckedGenres($selectedGenre);
 }
+else if (isset($_POST['sortTitle'])) {
+    $statement = $movieManager->getAllMovies();
+}
+else if (isset($_POST['sortRating'])) {
+    $statement = $movieManager->getAllMoviesByRating();
+}
 
 $result = $statement->get_result(); // Gets the results from the query
-
+//$result = getSorted($result);
 // Loop goes through all of the results from the query
 while($row = $result->fetch_assoc()) {
 	if( $isDeleted == false) { // Do not show if its been deleted
