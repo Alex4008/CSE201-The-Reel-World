@@ -1,5 +1,6 @@
 <?php
 	require("db.php");
+  $movieManager = new MovieManager($mysqli);
 ?>
 
 <!DOCTYPE html>
@@ -76,13 +77,18 @@
   </div>
 </nav>
 
-<?php
-	// Run queries here.
-?>
-
 <div style="padding:15px; margin-left: 15%; margin-right: 15%; background: #f7f5f4;">
-	<h1><?php print $_REQUEST['title']; ?></h1>
-	<p>More information here.</p>
+<?php
+	$statement = $movieManager->getSingleMovie($_REQUEST['title']); //This runs the function from the db.php file and returns the MySQL statement results.
+
+  $result = $statement->get_result(); // Gets the results from the query
+
+  while ($row = $result->fetch_assoc()) {
+    print '<h1>' . $row['title'] . '</h1>';
+    print '<p>Actors: ' . $row['actors'] . '</p>';
+    print '<p>Description: ' . $row['description'] . '</p>';
+  }
+?>
 </div>
 
 
