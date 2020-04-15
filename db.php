@@ -41,6 +41,17 @@ final class MovieManager
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
 	}
+    public function getAllMoviesByRating() {
+		$statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
+			FROM Movies m 
+			JOIN GenreMovie gm ON gm.movieId = m.movieId 
+			JOIN Genres g ON g.genreId = gm.genreId 
+			GROUP BY m.title 
+			ORDER BY m.rating DESC;"); //Defining the query
+		$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors); // Binding the variablesX()
+		$statement->execute(); // Executing the query
+		return $statement; // Return the results from the query
+	}
     
     public function getAllGenres() {
         $statement = $this->mysqli->prepare("SELECT DISTINCT description FROM Genres;"); 
