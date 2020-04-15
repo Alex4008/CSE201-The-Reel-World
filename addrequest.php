@@ -1,5 +1,6 @@
 <?php
   require 'db.php';
+  $movieManager = new MovieManager($mysqli);
   session_start();
 ?>
 
@@ -71,7 +72,7 @@
 		  </div>
 		</nav>
 
-    <div class=".container ">
+    <div class="container ">
       <?php
 				if (!isset($_SESSION['loggedIn'])) {
 					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
@@ -98,7 +99,7 @@
                     <div class="genres">
                       <select name="genres[]" id="movieGenres" class="form-control"  multiple="multiple" style="display: none;">';
           //Gets all genres and populate
-          $statement = getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
+          $statement = $movieManager -> getAllGenres(); //This runs the function from the db.php file and returns the MySQL statement results.
 
         	$result = $statement->get_result(); // Gets the results from the query
         	$i = 0;
@@ -140,7 +141,7 @@
                     <div class="actors">
                       <select name="actors[]" id="movieActors" class="form-control"  multiple="multiple" style="display: none;">';
           //Gets all genres and populate
-          $statement = getAllActors(); //This runs the function from the db.php file and returns the MySQL statement results.
+          $statement = $movieManager -> getAllActors(); //This runs the function from the db.php file and returns the MySQL statement results.
 
         	$result = $statement->get_result(); // Gets the results from the query
         	$i = 0;
@@ -209,11 +210,6 @@
 			?>
       <?php include 'login.php' ?>
     </div>
-    <?php
-      if (isset($_POST['movieTitle'])) {
-        print('<script>console.log("here")</script>');
-        print('<script>console.log("'.json_encode($_POST, JSON_HEX_TYPE).'")</script>');
-      }
-    ?>
+
   </body>
 </html>
