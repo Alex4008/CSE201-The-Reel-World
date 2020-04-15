@@ -184,7 +184,7 @@ $result = $statement->get_result(); // Gets the results from the query
 //$result = getSorted($result);
 // Loop goes through all of the results from the query
 while($row = $result->fetch_assoc()) {
-	if( $isDeleted == false) { // Do not show if its been deleted
+	if( $row['isDeleted'] == false) { // Do not show if its been deleted
 
 		if($count == 4) {
 			$count = 0;
@@ -200,7 +200,7 @@ while($row = $result->fetch_assoc()) {
 
 		print '<div class="card-body">';
 		print '<h5 class="card-title">' . $row['title'] . '</h5>';
-		print '<p class="card-text"> Genre: ' . $row['genre'] . ' <br>Description: ' . $row['description'] . ' <br>Actors: ' . $row['actors'] . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
+		print '<p class="card-text"> Genre: ' . $row['genre'] . ' <br>Rating: ' . $row['rating'] . ' /10</p>';
 		print '<a href="' . $row['imdbLink'] . '" class="btn btn-primary">IMDB</a>';
 		print '</div>';
 		print '</div>';
