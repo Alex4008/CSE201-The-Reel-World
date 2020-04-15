@@ -1,5 +1,6 @@
 <?php
   require_once 'db.php';
+  $movieManager = new MovieManager($mysqli);
 ?>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
@@ -24,7 +25,7 @@
 				<?php
 					if (isset($_POST['userName']) && isset($_POST['password'])) {
             //  sanitize input if have time
-						$result = login($_POST['userName'], $_POST['password']) -> get_result();
+						$result = $movieManager -> login($_POST['userName'], $_POST['password']) -> get_result();
 						$count = 0;
 						while($row = $result->fetch_assoc()) {
 							$_SESSION['userId'] = $row['userId'];
@@ -37,7 +38,7 @@
 
 						if ($count === 1) {
 							$_SESSION['loggedIn'] = true;
-							// header("Location: /index.php "); //Go back to index after loggedIn
+							header('Location: '.$_SERVER['REQUEST_URI']);
 						} else {
 							print('<div class="errorMessage">No such user found. Please try again.</div>');
 						}
