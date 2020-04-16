@@ -25,7 +25,7 @@
 				<?php
 					if (isset($_POST['userName']) && isset($_POST['password'])) {
             //  sanitize input if have time
-						$result = $movieManager -> login($_POST['userName'], $_POST['password']) -> get_result();
+						$result = $userManager -> login($_POST['userName'], $_POST['password']) -> get_result();
 						$count = 0;
 						while($row = $result->fetch_assoc()) {
 							$_SESSION['userId'] = $row['userId'];
