@@ -61,7 +61,7 @@ final class MovieManager
 		return $statement; // Return the results from the query
     }
 
-		public function getAllActors() {
+    public function getAllActors() {
         $statement = $this->mysqli->prepare("SELECT DISTINCT actorId, actorName FROM Actors WHERE isDeleted = false;");
         //Defining the query
 		$statement->bind_result($actorId, $actorName); // Binding the variables
@@ -100,8 +100,18 @@ final class MovieManager
 		$statement->execute();
 		return $statement;
 	}
+}
 
-	public function login($userName, $password) {
+final class UserManager
+{
+    private $mysqli;
+
+    public function __construct($mysqli_conn)
+    {
+        $this->mysqli = $mysqli_conn;
+    }
+    
+    public function login($userName, $password) {
 
         $sql = "SELECT u.userId, u.userName, u.displayName, r.roleName
         FROM Users u

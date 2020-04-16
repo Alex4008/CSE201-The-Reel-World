@@ -3,6 +3,7 @@
 	session_start();
 
     $movieManager = new MovieManager($mysqli);
+    $userManager = new UserManager($mysqli);
 
     // Printing POST for debugging
 //    echo("<p style='color:white;'>POST=</p>");

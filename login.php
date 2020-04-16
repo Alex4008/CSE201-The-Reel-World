@@ -1,6 +1,6 @@
 <?php
   require_once 'db.php';
-  $movieManager = new MovieManager($mysqli);
+  $userManager = new UserManager($mysqli);
 ?>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">

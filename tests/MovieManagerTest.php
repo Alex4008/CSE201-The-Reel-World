@@ -6,6 +6,7 @@ require_once('db.php');
 
 final class MovieManagerTest extends TestCase
 {
+    // Testing if MovieManager object can be created 
     public function testCanBeCreated(): void
     {
         $this->assertInstanceOf(
@@ -14,6 +15,8 @@ final class MovieManagerTest extends TestCase
         );
     }
     
+    // Testing if getAllMovies() returns more than zero movies
+    // Assumes there is at least 1 movie in database 
     public function testCanGetAllMovies(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -26,6 +29,22 @@ final class MovieManagerTest extends TestCase
         );
     }
     
+    // Testing if getAllMoviesByRating() returns more than zero movies
+    // Assumes there is at least 1 movie in database
+    public function testCanGetAllMoviesByRating(): void
+    {
+        $mm = new MovieManager($GLOBALS['mysqli']);
+        $statement = $mm->getAllMoviesByRating();
+        $result = $statement->store_result();
+        
+        $this->assertGreaterThan(
+            0,
+            $statement->num_rows
+        );
+    }
+    
+    // Testing if getAllGenres() returns all 20 genres
+    // Assumes there are 20 genres in the database  
     public function testCanGetAllGenres(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -38,6 +57,22 @@ final class MovieManagerTest extends TestCase
         );
     }
     
+    // Testing if getAllActors() returns more than 0 actors
+    // Assumes there is at least 1 actor in the database   
+    public function testCanGetAllActors(): void
+    {
+        $mm = new MovieManager($GLOBALS['mysqli']);
+        $statement = $mm->getAllActors();
+        $result = $statement->store_result();
+        
+        $this->assertGreaterThan(
+            0,
+            $statement->num_rows
+        );
+    }
+    
+    // Testing if getCheckedGenres() can get movies of a genre when movies of that genre exist
+    // Assumes there are 3 movies with genre 'romance' 
     public function testCanGetMatchedGenres(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -50,6 +85,8 @@ final class MovieManagerTest extends TestCase
         );
     }
     
+    // Testing if getCheckedGenres() can get movies of a genre when movies of that genre do not exist
+    // Assumes there are 0 movies with genre 'fantasy' 
     public function testCanGetNotMatchedGenres(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -58,6 +95,19 @@ final class MovieManagerTest extends TestCase
         
         $this->assertEquals(
             0,
+            $statement->num_rows
+        );
+    }
+    
+    // Testing if getSingleMovie() returns exactly one movie
+    public function testCanGetSingleMovie(): void
+    {
+        $mm = new MovieManager($GLOBALS['mysqli']);
+        $statement = $mm->getSingleMovie('cleopatra');
+        $result = $statement->store_result();
+        
+        $this->assertEquals(
+            1,
             $statement->num_rows
         );
     }
