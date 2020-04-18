@@ -54,9 +54,9 @@ final class MovieManager
 	}
 
     public function getAllGenres() {
-        $statement = $this->mysqli->prepare("SELECT DISTINCT description FROM Genres;");
+        $statement = $this->mysqli->prepare("SELECT DISTINCT genreId, description FROM Genres;");
         //Defining the query
-		$statement->bind_result($description); // Binding the variables
+		$statement->bind_result($genreId, $description); // Binding the variables
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
     }
@@ -88,12 +88,12 @@ final class MovieManager
     }
 
     public function getSingleMovie($movieTitle) {
-		$statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors 
+		$statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors
 			FROM Movies m
-			JOIN GenreMovie gm ON gm.movieId = m.movieId 
-			JOIN Genres g ON g.genreId = gm.genreId 
+			JOIN GenreMovie gm ON gm.movieId = m.movieId
+			JOIN Genres g ON g.genreId = gm.genreId
 			WHERE m.title = ?
-			GROUP BY m.title 
+			GROUP BY m.title
 			ORDER BY m.title;"); //Defining the query
 		$statement->bind_param("s", $movieTitle);
 		$statement->bind_result($movieId, $requestId, $title, $description, $keywords, $imdbLink, $image, $imageAddress, $rating, $isDeleted, $genre, $actors); // Binding the variablesX()
@@ -110,7 +110,7 @@ final class UserManager
     {
         $this->mysqli = $mysqli_conn;
     }
-    
+
     public function login($userName, $password) {
 
         $sql = "SELECT u.userId, u.userName, u.displayName, r.roleName
@@ -126,6 +126,46 @@ final class UserManager
 				$statement->execute(); // Executing the query
 				return $statement; // Return the results from the query
     }
+}
+
+final class RequestManager
+{
+	private $mysqli;
+
+	public function __construct($mysqli_conn)
+	{
+			$this->mysqli = $mysqli_conn;
+	}
+
+	public function saveRequest($userId, $requestName, $description) {
+		$sql = "INSERT INTO Requests(userId, requestName, description)
+		VALUES (".$userId.", '".$requestName."', '".$description."');";
+
+		if ($this->mysqli->query($sql) === TRUE) {
+		    echo "New record created successfully";
+		} else {
+		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
+		}
+		// if (!($statement = $this->mysqli->prepare($sql))) {
+		// 		echo "prepare fail" . $mysqli->error;
+		// }
+		// //Defining the query
+		// $statement->bind_param("iss", $userId, $requestName, $description); // Binding the params
+		// $statement->execute(); // Executing the query
+		// echo($sql); // Return the results from the query
+	}
+
+	public function getRequests($userId) {
+		$sql = "SELECT r.requestId, r.requestDate, r.requestName, r.description, (SELECT statusDescription FROM Status s WHERE s.statusId=r.statusId) AS status FROM Requests r WHERE r.userId=".$userId.";";
+
+		if (!($statement = $this -> mysqli -> prepare($sql))) {
+			echo "prepare fail" . $mysqli->error;
+		}
+
+		$statement -> bind_result($requestId, $requestDate, $requestName, $description, $status);
+		$statement -> execute();
+		return $statement;
+	}
 }
 
 ?>

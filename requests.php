@@ -1,5 +1,5 @@
 <?php
-	require 'db.php';
+	require_once 'db.php';
 	session_start();
 ?>
 
@@ -23,8 +23,11 @@
 			margin-top:20px;
 			color: white;
 		}
+
+		.requestCard {
+			margin: 20px;
+		}
 	</style>
-	<script src="script.js"></script>
 </head>
 	<body style="font-family:Alegreya;background-color:#1e272e;">
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -52,7 +55,56 @@
 				if (!isset($_SESSION['loggedIn'])) {
 					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
 				} else {
-					//show request list
+					$requestManager = new RequestManager($mysqli);
+					$content = '';
+					$statement = $requestManager -> getRequests($_SESSION['userId']);
+					$result = $statement -> get_result();
+
+					while ($row = $result -> fetch_assoc()) {
+						$requestDescription = $row['description'];
+						$info = json_decode($requestDescription, true);
+
+						$content = $content.'
+						<div class="card mb-3 requestCard">
+							<div class="row no-gutters">
+								<div class="col-md-2">
+									<img src="..." class="card-img" alt="...">
+								</div>
+								<div class="col-md-10">
+									<div class="card-body">
+										<h5 class="card-title">'.$info -> movieTitle.'</h5>
+										<p class="card-text">'.$row['description'].'</p>
+										<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
+										<div class="text-right">
+											<button class="btn btn-secondary">Cancel</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						';
+					}
+					// $content = $content.'
+					// <div class="card mb-3 requestCard">
+					// 	<div class="row no-gutters">
+					// 		<div class="col-md-2">
+					// 			<img src="..." class="card-img" alt="...">
+					// 		</div>
+					// 		<div class="col-md-10">
+					// 			<div class="card-body">
+					// 				<h5 class="card-title">Card title</h5>
+					// 				<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+					// 				<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+					// 				<div class="text-right">
+					// 					<button class="btn btn-secondary">Cancel</button>
+					// 				</div>
+					// 			</div>
+					// 		</div>
+					// 	</div>
+					// </div>
+					// ';
+
+					print $content;
 				}
 			?>
 			<?php include 'login.php' ?>

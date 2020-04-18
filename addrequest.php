@@ -25,6 +25,7 @@
 		.holder {
       margin:0 auto;
       padding:20px;
+      text-align: center;
 		}
 
     form {
@@ -43,6 +44,13 @@
 			margin-top:20px;
 			color: white;
 		}
+
+    .info {
+      margin:0 auto;
+      margin-top:20px;
+      margin-bottom: 20px;
+      padding:20px;
+    }
 
     form > h3 {
       text-align: center;
@@ -72,14 +80,15 @@
 		  </div>
 		</nav>
 
-    <div class="container ">
+    <div class="container">
       <?php
 				if (!isset($_SESSION['loggedIn'])) {
 					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
 				} else {
-					$content ='<div holder">';
+          $content = $content.'<div class="text-center info"><span class="bg-light w-75 rounded" style="color: #11702d;" id="status"></span></div>';
+					$content = $content.'<div holder">';
           $content = $content.'
-          <form class="bg-light text-dark w-75 rounded" method="post">
+          <form class="bg-light text-dark w-75 rounded" method="post" id="requestForm">
                 <h3>Movie Request Form</h3>
                 <div class ="row">
                   <div class="form-group col-lg-12">
@@ -112,8 +121,8 @@
               } else {
                 $content = $content.'<option value="'.$row[genreId].'">'.$row[description].'</option>';
               }
+              $i = $i + 1;
             }
-            $i = $i + 1;
           }
           $content = $content.'</select>
                     </div>
@@ -128,7 +137,7 @@
                   <label>New Genres</label>
                   <div class = "row">
                     <div class="form-group col-lg-11">
-                        <input type="text" name="newGenreDescription[]" class="form-control" placeholder="New genre\'s name"/>
+                        <input type="text" name="newGenreDescription[]" class="form-control newGenreDescription" placeholder="New genre\'s name"/>
                     </div>
                     <div class="form-group col-lg-1">
                           <button type="button" class="btn btn-danger" id="addLineGenre"><i class="fa fa-plus"></i></button>
@@ -150,7 +159,7 @@
         	while($row = $result->fetch_assoc()) {
             if ($row['isDeleted'] == false) {
               if ($i <= 1) {
-                $content = $content.'<option selected value="'.$row[actorId].'">'.$row[actorName].'</option>';
+                $content = $content.'<option selected name="genres[0]" value="'.$row[actorId].'">'.$row[actorName].'</option>';
               } else {
                 $content = $content.'<option value="'.$row[actorId].'">'.$row[actorName].'</option>';
               }
@@ -175,12 +184,12 @@
                       <label>Actor\'s IMBd Link</label>
                     </div>
                   </div>
-                  <div class = "row" style="margin-bottom:10px;">
+                  <div class = "row lineActor" style="margin-bottom:10px;">
                     <div class="col-lg-5">
-                      <input type="text" name="newActorName[]" class="form-control" placeholder="New actor\'s name" />
+                      <input type="text" name="newActorName[]" class="form-control newActorName" placeholder="New actor\'s name" />
                     </div>
                     <div class="col-lg-6">
-                      <input type="text" name="newActorLink[]" class="form-control" placeholder="New actor\'s link" />
+                      <input type="text" name="newActorLink[]" class="form-control newActorLink" placeholder="New actor\'s link" />
                     </div>
                     <div class="col-lg-1">
                       <button type="button" class="btn btn-danger" id="addLineActor"><i class="fa fa-plus"></i></button>
@@ -210,6 +219,5 @@
 			?>
       <?php include 'login.php' ?>
     </div>
-
   </body>
 </html>
