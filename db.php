@@ -146,13 +146,6 @@ final class RequestManager
 		} else {
 		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
 		}
-		// if (!($statement = $this->mysqli->prepare($sql))) {
-		// 		echo "prepare fail" . $mysqli->error;
-		// }
-		// //Defining the query
-		// $statement->bind_param("iss", $userId, $requestName, $description); // Binding the params
-		// $statement->execute(); // Executing the query
-		// echo($sql); // Return the results from the query
 	}
 
 	public function getRequests($userId) {
@@ -165,6 +158,16 @@ final class RequestManager
 		$statement -> bind_result($requestId, $requestDate, $requestName, $description, $status);
 		$statement -> execute();
 		return $statement;
+	}
+
+	public function deleteRequest($requestId) {
+		$sql = "DELETE FROM Requests WHERE requestId = ".$requestId.";";
+
+		if ($this->mysqli->query($sql) === TRUE) {
+		    echo $requestId." deleted";
+		} else {
+		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
+		}
 	}
 }
 

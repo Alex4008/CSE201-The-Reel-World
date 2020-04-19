@@ -136,7 +136,7 @@ $(function(){
         url: '/saveRequest.php',
         type: 'POST',
         data: {
-          data: 'this is sample data'
+          data: JSON.stringify(data)
         },
         success: function(data) {
           console.log(data);

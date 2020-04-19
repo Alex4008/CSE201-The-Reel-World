@@ -1,8 +1,14 @@
 <?php
 	require_once 'db.php';
+	$requestManager = new RequestManager($mysqli);
 	session_start();
 ?>
 
+<?php
+	if ($_POST['requestId']) {
+		$requestManager -> deleteRequest($_POST['requestId']);
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +34,25 @@
 			margin: 20px;
 		}
 	</style>
+	<script>
+		$(document).ready (function() {
+			$('.cancelButton').on('click', function() {
+				let requestId = $(this).attr('requestId');
+				$.ajax({
+					url: '/requests.php',
+					type: 'POST',
+					data: {
+						requestId: requestId
+					},
+					success: function(data) {
+						console.log(data);
+						window.alert("Request #" + requestId + " is successfully cancelled");
+						location.reload();
+					}
+				});
+			});
+		});
+	</script>
 </head>
 	<body style="font-family:Alegreya;background-color:#1e272e;">
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -39,14 +64,24 @@
 		  </button>
 
 		  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-		    <ul class="navbar-nav mr-auto">
-		      <li class="nav-item active">
-		        <a class="nav-link" href="index.php">Home<span class="sr-only">(current)</span></a>
-		      </li>
-					<li class="nav-item">
-		        <a class="nav-link" href="requests.php">My Requests</a>
-		      </li>
-		    </ul>
+				<ul class="navbar-nav mr-auto">
+				  <li class="nav-item ">
+				    <a class="nav-link navTab" href="index.php">Home<span class="sr-only">(current)</span></a>
+				  </li>
+				  <li class="nav-item active">
+				    <a class="nav-link navTab" href="requests.php">My Requests</a>
+				  </li>
+				  <?php
+				    if ($_SESSION['loggedIn'] && $_SESSION['role'] == 'Admin') {
+				      $item = '
+				      <li class="nav-item">
+				        <a class="nav-link navTab" href="pendingRequests.php">Pending Requests</a>
+				      </li>';
+
+				      print $item;
+				    }
+				  ?>
+				</ul>
 		  </div>
 		</nav>
 
@@ -55,55 +90,55 @@
 				if (!isset($_SESSION['loggedIn'])) {
 					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
 				} else {
-					$requestManager = new RequestManager($mysqli);
 					$content = '';
 					$statement = $requestManager -> getRequests($_SESSION['userId']);
 					$result = $statement -> get_result();
 
 					while ($row = $result -> fetch_assoc()) {
 						$requestDescription = $row['description'];
-						$info = json_decode($requestDescription, true);
+						if ($requestDescription != "") {
+							$info = json_decode($requestDescription, true);
 
-						$content = $content.'
-						<div class="card mb-3 requestCard">
-							<div class="row no-gutters">
-								<div class="col-md-2">
-									<img src="..." class="card-img" alt="...">
-								</div>
-								<div class="col-md-10">
-									<div class="card-body">
-										<h5 class="card-title">'.$info -> movieTitle.'</h5>
-										<p class="card-text">'.$row['description'].'</p>
-										<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
-										<div class="text-right">
-											<button class="btn btn-secondary">Cancel</button>
+							$content = $content.'
+							<div class="card mb-3 requestCard">
+								<div class="row no-gutters">
+									<div class="col-md-2">
+										<img src="'.$info['imageLink'].'" class="card-img" alt="'.$info['movieTitle'].'">
+									</div>
+									<div class="col-md-10">
+										<div class="card-body">
+											<h5 class="card-title"><b>'.$info['movieTitle'].'</b></h5>
+											<p class="card-text">Genres: '.implode(", ", $info['genreToDisplay']).'</p>
+											<p class="card-text">Actors: '.implode(", ", $info['actorToDisplay']).'</p>
+											<p class="card-text">Description: '.$info['movieDescription'].'</p>
+											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
+											<div class="text-right">
+												<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						';
+							';
+						} else {
+							$content = $content.'
+							<div class="card mb-3 requestCard">
+								<div class="row no-gutters">
+									<div class="col-md-12">
+										<div class="card-body">
+											<h5 class="card-title">'.$row['requestName'].'</h5>
+											<p class="card-text">Request Description: '.$row['description'].'</p>
+											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
+											<div class="text-right">
+												<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							';
+						}
 					}
-					// $content = $content.'
-					// <div class="card mb-3 requestCard">
-					// 	<div class="row no-gutters">
-					// 		<div class="col-md-2">
-					// 			<img src="..." class="card-img" alt="...">
-					// 		</div>
-					// 		<div class="col-md-10">
-					// 			<div class="card-body">
-					// 				<h5 class="card-title">Card title</h5>
-					// 				<p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-					// 				<p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-					// 				<div class="text-right">
-					// 					<button class="btn btn-secondary">Cancel</button>
-					// 				</div>
-					// 			</div>
-					// 		</div>
-					// 	</div>
-					// </div>
-					// ';
-
 					print $content;
 				}
 			?>

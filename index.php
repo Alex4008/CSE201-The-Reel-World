@@ -2,8 +2,8 @@
 	require 'db.php';
 	session_start();
 
-    $movieManager = new MovieManager($mysqli);
-    $userManager = new UserManager($mysqli);
+  $movieManager = new MovieManager($mysqli);
+  $userManager = new UserManager($mysqli);
 
     // Printing POST for debugging
 //    echo("<p style='color:white;'>POST=</p>");
@@ -43,8 +43,9 @@
 			color:black;
 		}
 	</style>
-	<script src="script.js"></script>
+
 </head>
+
 <body style="font-family:Alegreya;background-color:#1e272e;">
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <div class="navbar-header">
@@ -55,14 +56,24 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.php">Home<span class="sr-only">(current)</span></a>
-      </li>
-			<li class="nav-item">
-        <a class="nav-link" href="requests.php">My Requests</a>
-      </li>
-    </ul>
+		<ul class="navbar-nav mr-auto">
+		  <li class="nav-item active">
+		    <a class="nav-link navTab" href="index.php">Home<span class="sr-only">(current)</span></a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link navTab" href="requests.php">My Requests</a>
+		  </li>
+		  <?php
+		    if ($_SESSION['loggedIn'] && $_SESSION['role'] == 'Admin') {
+		      $item = '
+		      <li class="nav-item">
+		        <a class="nav-link navTab" href="pendingRequests.php">Pending Requests</a>
+		      </li>';
+
+		      print $item;
+		    }
+		  ?>
+		</ul>
 		<div class="navbar-nav ml-auto w-60 order-3">
 			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
 				<div class="input-group">
@@ -80,9 +91,9 @@
 				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="classSortOptions">
                     <div class="font-weight-bold" style="margin-left:10px;">Sort</div>
                     <form class="px-4 py-3 rounded" id="sortOptions" method="post">
-                        
+
                     <div class="form-group" style="margin-left:10px;">
-                     <input type="checkbox" class="form-check-input" id="By title" value="By title" name="sortTitle">  
+                     <input type="checkbox" class="form-check-input" id="By title" value="By title" name="sortTitle">
                     <label for="By title">By title</label>
                         </div>
                     <div class="form-group" style="margin-left:10px;">
@@ -162,7 +173,7 @@ function getPostGenres() {
 //    while($row = $result->fetch_assoc()) {
 ////        if($isDeleted == false) {
 //            $arr = array($row["movieId"], $row["title"], $row["imageAddress"], $row["genre"], $row["description"], $row["actors"], $row["rating"], $row["imdbLink"]);
-//            array_push($resultArr, $arr);  
+//            array_push($resultArr, $arr);
 ////        }
 //    }
 //    return $result;
