@@ -33,6 +33,11 @@
 		.requestCard {
 			margin: 20px;
 		}
+
+		a:link, a:visited {
+			text-decoration: none;
+			color:black;
+		}
 	</style>
 	<script>
 		$(document).ready (function() {
@@ -81,6 +86,17 @@
 				      print $item;
 				    }
 				  ?>
+				</ul>
+				<div class="text-right">
+					<button class="btn btn-warning" type="button" style="margin:5px; "><a href="addrequest.php">Add A Movie</a></button>
+				</div>
+				<ul class="navbar-nav">
+						<li class="nav-item">
+								<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+						</li>
+						<li class="nav-item">
+								<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+						</li>
 				</ul>
 		  </div>
 		</nav>

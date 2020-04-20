@@ -87,6 +87,16 @@
     		    }
     		  ?>
     		</ul>
+        <div class="text-right">
+          <ul class="navbar-nav">
+  						<li class="nav-item">
+  								<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+  						</li>
+  						<li class="nav-item">
+  								<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+  						</li>
+  				</ul>
+        </div>
 		  </div>
 		</nav>
 
