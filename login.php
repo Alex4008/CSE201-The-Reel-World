@@ -1,6 +1,5 @@
 <?php
   require_once 'db.php';
-  session_start();
   $userManager = new UserManager($mysqli);
 ?>
 

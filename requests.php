@@ -5,7 +5,7 @@
 ?>
 
 <?php
-	if ($_POST['requestId']) {
+	if (isset($_POST['requestId'])) {
 		$requestManager -> deleteRequest($_POST['requestId']);
 	}
 ?>
@@ -39,7 +39,7 @@
 			$('.cancelButton').on('click', function() {
 				let requestId = $(this).attr('requestId');
 				$.ajax({
-					url: '/requests.php',
+					url: './requests.php',
 					type: 'POST',
 					data: {
 						requestId: requestId
