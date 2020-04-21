@@ -1,6 +1,8 @@
 <?php
 	require("db.php");
+	session_start();
   $movieManager = new MovieManager($mysqli);
+	$commentManager = new CommentManager($mysqli);
 ?>
 
 <!DOCTYPE html>
@@ -16,81 +18,154 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
 	<style>
-		.left-align {
-			position: abosolute;
-			left: 5px;
+		.cButton {
+			margin-right: 10px;
+			margin-bottom: 5px;
 		}
+
+	 img {
+		 margin: 10px;
+	 }
 	</style>
 </head>
 <body style="font-family:Alegreya;background-color:#1e272e;">
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-  <div class="navbar-header">
-    <a class="navbar-brand" href="index.php">THE REEL WORLD</a>
-  </div>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+	  <div class="navbar-header">
+	    <a class="navbar-brand" href="index.php">THE REEL WORLD</a>
+	  </div>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <!--
-      <li class="nav-item">
-        <a class="nav-link" href="#">My Favorite Movies</a>
-      </li>
-  -->
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search...">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" style="background-color:#c0c3c5;color:#053560;">GO</button>
-        </span>
-      </div>
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+	      <li class="nav-item active">
+	        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+	      </li>
+				<li class="nav-item">
+					<a class="nav-link navTab" href="requests.php">My Requests</a>
+				</li>
+				<?php
+					if ($_SESSION['loggedIn'] && $_SESSION['role'] == 'Admin') {
+						$item = '
+						<li class="nav-item">
+							<a class="nav-link navTab" href="pendingRequests.php">Pending Requests</a>
+						</li>';
 
-      <button class="btn btn-danger" type="button" style="margin:5px;margin-left:10px;">SORT</button>
-			<div class="btn-group">
-			  <button type="button" class="btn btn-danger">FILTER</button>
-			  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			    <span class="sr-only">Toggle Dropdown</span>
-			  </button>
-			  <div class="dropdown-menu bg-secondary text-light">
-					<div class="font-weight-bold" style="margin-left:10px;">By Genre</div>
-					<form class="px-4 py-3 rounded" id="filterOptions">
-						<!-- add php here to populate options based on the Genres table -->
-						<div class="form-group" style="margin-left:10px;">
-								<input type="checkbox" class="form-check-input" id="romance" value="romance">
-                <label for="romance">Romance </label>
-            </div>
-						<div class="form-group" style="margin-left:10px;">
-								<input type="checkbox" class="form-check-input" id="action" value="action">
-                <label for="romance">Action </label>
-            </div>
-				    <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
-				  </form>
-			  </div>
+						print $item;
+					}
+				?>
+	    </ul>
+	    <form class="form-inline my-2 my-lg-0">
+	      <button class="btn btn-warning" type="button" style="margin:5px; "><a href="addrequest.php" style="text-decoration: none;
+				color:black;">Add A Movie</a></button>
+	    </form>
+			<ul class="navbar-nav">
+					<li class="nav-item">
+							<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+					</li>
+					<li class="nav-item">
+							<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+					</li>
+			</ul>
+	  </div>
+	</nav>
+
+
+	<div class="container">
+	<div  style="padding:15px; margin: 0 auto; background: #f7f5f4;">
+		<div class="row">
+			<div class="col-lg-11">
+			<?php
+				$statement = $movieManager->getSingleMovie($_REQUEST['title']); //This runs the function from the db.php file and returns the MySQL statement results.
+
+			  $result = $statement->get_result(); // Gets the results from the query
+				$movieId = null;
+			  while ($row = $result->fetch_assoc()) {
+			    print '<h1>' . $row['title'] . '</h1>';
+			    print '<p>Actors: ' . $row['actors'] . '</p>';
+			    print '<p>Description: ' . $row['description'] . '</p>';
+					$movieId = $row['movieId'];
+			  }
+			?>
 			</div>
-      <button class="btn btn-warning" type="button" style="margin:5px; ">Add A Movie</button>
-    </form>
-  </div>
-</nav>
-
-<div style="padding:15px; margin-left: 15%; margin-right: 15%; background: #f7f5f4;">
-<?php
-	$statement = $movieManager->getSingleMovie($_REQUEST['title']); //This runs the function from the db.php file and returns the MySQL statement results.
-
-  $result = $statement->get_result(); // Gets the results from the query
-
-  while ($row = $result->fetch_assoc()) {
-    print '<h1>' . $row['title'] . '</h1>';
-    print '<p>Actors: ' . $row['actors'] . '</p>';
-    print '<p>Description: ' . $row['description'] . '</p>';
-  }
-?>
-</div>
-
-
+		</div>
+	</div>
+		<div style="padding:15px; margin: 0 auto; margin-top:50px; background: #f7f5f4;">
+			<div class="row">
+				<div class="col-lg-11" >
+					<h2>Comments</h2>
+					<p><small>If you are not logged in, you will not be able to modify or delete your comments.</small></p>
+				</div>
+			</div>
+			<div id="commentSection">
+				<div class="commentLine ">
+					<?php
+						$statement = $commentManager -> getCommentsByMovie($movieId);
+						$result = $statement -> get_result();
+						$content = '';
+						while ($row = $result->fetch_assoc()) {
+							$content .= '
+							<div class="card mb-3">
+								<div class="row no-gutters">
+									<div class="col-md-1">
+										<img src="https://api.adorable.io/avatars/200/'.$row['userName'].'" class="card-img" alt="'.$row['userName'].'">
+									</div>
+									<div class="col-md-11">
+										<div class="card-body">
+											<h5 class="card-title"><b>'.$row['userName'].'</b></h5>
+											<p class="card-text">'.$row['commentText'].'</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							';
+						}
+						print $content;
+					?>
+				</div>
+				<div class="addComment">
+					<form method="post">
+						<div class="card mb-3">
+						  <div class="row no-gutters">
+						    <div class="col-md-1">
+									<?php
+										if (isset($_SESSION['loggedIn'])) {
+											echo '<img src="https://api.adorable.io/avatars/200/'.$_SESSION['userName'].'" class="card-img" alt="'.$_SESSION['userName'].'">';
+										} else {
+											echo '<img src="https://api.adorable.io/avatars/200/guest-user" class="card-img" alt="Guest">';
+										}
+									?>
+						    </div>
+						    <div class="col-md-11">
+						      <div class="card-body">
+						        <h5 class="card-title"><b>
+											<?php
+												if (isset($_SESSION['loggedIn'])) {
+													echo $_SESSION['userName'];
+												} else {
+													echo 'Guest User';
+												}
+											?>
+										</b></h5>
+										<textarea class="form-control card-text" rows="1"></textarea>
+						      </div>
+						    </div>
+						  </div>
+							<div class="row">
+								<div class="col">
+									<div class="text-right">
+										<button type="button" class="btn btn-danger cButton">POST</button>
+										<button type="button" class="btn btn-secondary cButton">CANCEL</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	<?php include 'login.php' ?>
+	</div>
 </body>
 </html>

@@ -171,4 +171,29 @@ final class RequestManager
 	}
 }
 
+final class CommentManager
+{
+	private $mysqli;
+
+	public function __construct($mysqli_conn) {
+		$this -> mysqli = $mysqli_conn;
+	}
+
+	public function getCommentsByMovie ($movieId) {
+		$sql = "SELECT c.commentId, u.userName, c.commentText
+		FROM Comments c
+		JOIN Users u ON c.userId = u.userId
+		WHERE c.movieId = ".$movieId."
+		GROUP BY c.commentId
+		ORDER BY c.commentId;";
+
+		if (!($statement = $this -> mysqli -> prepare($sql))) {
+			echo "prepare fail" . $mysqli->error;
+		}
+
+		$statement -> bind_result($commentId, $userName, $commentText);
+		$statement -> execute();
+		return $statement;
+	}
+}
 ?>

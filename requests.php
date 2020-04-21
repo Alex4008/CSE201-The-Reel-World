@@ -33,11 +33,7 @@
 		.requestCard {
 			margin: 20px;
 		}
-
-		a:link, a:visited {
-			text-decoration: none;
-			color:black;
-		}
+		
 	</style>
 	<script>
 		$(document).ready (function() {
@@ -88,7 +84,8 @@
 				  ?>
 				</ul>
 				<div class="text-right">
-					<button class="btn btn-warning" type="button" style="margin:5px; "><a href="addrequest.php">Add A Movie</a></button>
+					<button class="btn btn-warning" type="button" style="margin:5px; "><a href="addrequest.php" style="text-decoration: none;
+					color:black;">Add A Movie</a></button>
 				</div>
 				<ul class="navbar-nav">
 						<li class="nav-item">
