@@ -43,8 +43,8 @@ final class MovieManagerTest extends TestCase
         );
     }
     
-    // Testing if getAllGenres() returns all 20 genres
-    // Assumes there are 20 genres in the database  
+    // Testing if getAllGenres() returns all 24 genres
+    // Assumes there are 24 genres in the database  
     public function testCanGetAllGenres(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -52,7 +52,7 @@ final class MovieManagerTest extends TestCase
         $result = $statement->store_result();
         
         $this->assertEquals(
-            20,
+            24,
             $statement->num_rows
         );
     }
@@ -100,6 +100,7 @@ final class MovieManagerTest extends TestCase
     }
     
     // Testing if getSingleMovie() returns exactly one movie
+    // Assumes there is a movie with title 'cleopatra' 
     public function testCanGetSingleMovie(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
