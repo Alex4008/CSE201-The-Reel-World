@@ -77,9 +77,9 @@
 		<div class="navbar-nav ml-auto w-60 order-3">
 			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
 				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Search...">
+					<input type="text" class="form-control" id="Search" name="Search" placeholder="Search...">
 					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;">GO</button>
+						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;" id="GO" name="GO">GO</button>
 					</span>
 				</div>
 				<div>
@@ -180,7 +180,7 @@ function getPostGenres() {
 //}
 $selectedGenre = getPostGenres();
 
-if (!isset($_POST['genre']) && !isset($_POST['movieIds']) && !isset($_POST['sortTitle']) && !isset($_POST['sortRating']))
+if (!isset($_POST['genre']) && !isset($_POST['movieIds']) && !isset($_POST['sortTitle']) && !isset($_POST['sortRating']) && $_POST['Search'] == "")
     $statement = $movieManager->getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 else if (isset($_POST['genre'])) {
     $statement = $movieManager->getCheckedGenres($selectedGenre);
@@ -190,6 +190,10 @@ else if (isset($_POST['sortTitle'])) {
 }
 else if (isset($_POST['sortRating'])) {
     $statement = $movieManager->getAllMoviesByRating();
+}
+else if ($_POST['Search'] != "") {
+    print "<p>Going</p>";
+    $statement = $movieManager->getAllMoviesByKeyword($_POST['Search']);
 }
 
 $result = $statement->get_result(); // Gets the results from the query
