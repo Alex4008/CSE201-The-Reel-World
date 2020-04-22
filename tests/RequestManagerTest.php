@@ -8,6 +8,8 @@ final class RequestManagerTest extends TestCase
 {
     private $testUsername = 'unittestuser';
     private $testUserId = null;
+    private $testRequestName = 'unittestname';
+    private $testRequestDes = 'unittestdescription';
     
     // Testing if RequestManager object can be created 
     public function testCanBeCreated(): void
@@ -18,30 +20,30 @@ final class RequestManagerTest extends TestCase
         );
     }
     
-//    // Testing if getAllRequests() returns more than zero requests
-//    // Assumes there is at least 1 request in database 
-//    public function testCanGetAllRequests(): void
-//    {
-//        $mm = new RequestManager($GLOBALS['mysqli']);
-//        $statement = $mm->getAllRequests();
-//        $result = $statement->store_result();
-//        
-//        $this->assertGreaterThan(
-//            0,
-//            $statement->num_rows
-//        );
-//    }
+    // Testing if getAllRequests() returns more than zero requests
+    // Assumes there is at least 1 request in database 
+    public function testCanGetAllRequests(): void
+    {
+        $mm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $mm->getAllRequests();
+        $result = $statement->store_result();
+        
+        $this->assertGreaterThan(
+            0,
+            $statement->num_rows
+        );
+    }
     
     // Testing if saveRequest() adds a request to the database
     public function testCanSaveRequest(): void
     {        
-        global $testUserId;
+        global $testUserId, $testRequestName, $testRequestDes;
         
         $this->cleanUpTest();
         $this->setUpTest();
         
         $mm = new RequestManager($GLOBALS['mysqli']);
-        $mm->saveRequest($testUserId, "testName", "testDescription");
+        $mm->saveRequest($testUserId, $testRequestName, $testRequestDes);
         
         $sql = "SELECT userId FROM Requests WHERE userId = '" . $testUserId . "'";
         $sqlResult = $GLOBALS['mysqli']->query($sql);
@@ -104,22 +106,54 @@ final class RequestManagerTest extends TestCase
     }
     
     // Testing if getSingleRequest() returns exactly one request
-    // Assumes there is a request with id 118
-//    public function testCanGetSingleRequest(): void
-//    {
-//        $mm = new RequestManager($GLOBALS['mysqli']);
-//        $statement = $mm->getSingleRequest(118);
-//        $result = $statement->store_result();
-//        
-//        $this->assertEquals(
-//            1,
-//            $statement->num_rows
-//        );
-//    }
-//    
-    
-    
+    public function testCanGetSingleRequest(): void
+    {
+        $this->cleanUpTest();
+        $this->setUpTest();
+        $requestId = $this->addTestRequest();
         
+        $mm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $mm->getSingleRequest($requestId);
+        $result = $statement->store_result();
+        
+        $this->assertEquals(
+            1,
+            $statement->num_rows
+        );
+        
+        $this->cleanUpTest();
+    }
+    
+    // Testing if getRequestDescription() returns the request description 
+    public function testCanGetRequestDescription(): void
+    {            
+        $this->cleanUpTest();
+        $this->setUpTest();
+        $requestId = $this->addTestRequest();
+        
+        $mm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $mm->getRequestDescription($requestId);
+        $result = $statement->store_result();
+        
+        $sql = "SELECT description FROM Requests WHERE requestId = '" . $requestId . "'";
+        $sqlResult = $GLOBALS['mysqli']->query($sql);
+                
+        $this->assertGreaterThan(
+            0,
+            $sqlResult->num_rows
+        );
+        
+        $row = $sqlResult->fetch_assoc();
+        
+        $this->assertEquals(
+            $testRequestDescription,
+            $row["description"]
+        );
+                
+        $this->cleanUpTest();
+    }
+    
+    // - - - - - HELPER FUNCTIONS - - - - - 
     // Inserts test user
     public function setUpTest(): void 
     {
@@ -136,9 +170,9 @@ final class RequestManagerTest extends TestCase
     // Returns request id 
     public function addTestRequest(): int
     {
-        global $testUserId; 
+        global $testUserId, $testRequestName, $testRequestDes; 
         
-        $sql = "INSERT INTO Requests (userId) VALUES ('" . $testUserId . "')";
+        $sql = "INSERT INTO Requests (userId, requestName, description) VALUES ('" . $testUserId . "', '" . $testRequestName . "', '" . $testRequestDes . "')";
         
         if ($GLOBALS['mysqli']->query($sql) === TRUE) {
             $requestId = $GLOBALS['mysqli']->insert_id;
