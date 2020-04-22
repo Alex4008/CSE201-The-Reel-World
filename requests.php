@@ -33,7 +33,7 @@
 		.requestCard {
 			margin: 20px;
 		}
-		
+
 	</style>
 	<script>
 		$(document).ready (function() {
@@ -89,7 +89,7 @@
 				</div>
 				<ul class="navbar-nav">
 						<li class="nav-item">
-								<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+								<a class="nav-link" href="./signup.php"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
 						</li>
 						<li class="nav-item">
 								<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>

@@ -126,6 +126,29 @@ final class UserManager
 				$statement->execute(); // Executing the query
 				return $statement; // Return the results from the query
     }
+
+		public function signup($userName, $password, $displayName) {
+			$sql = "INSERT INTO Users(userName, password, displayName)
+		 VALUES ('".$userName."', '".$password."', '".$displayName."');";
+
+		 if ($this->mysqli->query($sql) === TRUE) {
+				 echo "1";
+		 } else {
+				 echo "Error: " . $sql . "<br>" . $this->mysqli->error;
+		 }
+		}
+
+		public function checkUsername($userName) {
+			$sql = "SELECT userId FROM Users WHERE userName = '".$userName."';";
+			if (!($statement = $this->mysqli->prepare($sql))) {
+					echo "prepare fail" . $mysqli->error;
+			}
+
+			$statement -> bind_result($userId);
+			$statement -> execute();
+			$result = $statement->get_result();
+			echo $result-> num_rows;
+		}
 }
 
 final class RequestManager
@@ -187,13 +210,25 @@ final class CommentManager
 		GROUP BY c.commentId
 		ORDER BY c.commentId;";
 
-		if (!($statement = $this -> mysqli -> prepare($sql))) {
-			echo "prepare fail" . $mysqli->error;
-		}
+		// if (!()) {
+		// 	echo "prepare fail" . $mysqli->error;
+		// }
 
+		$statement = $this -> mysqli -> prepare($sql);
 		$statement -> bind_result($commentId, $userName, $commentText);
 		$statement -> execute();
 		return $statement;
+	}
+
+	public function addComment($userId, $movieId, $commentText) {
+		$sql = "INSERT INTO Comments(userId, movieId, commentText)
+		VALUES (".$userId.", ".$movieId.", '".$commentText."');";
+
+		if ($this->mysqli->query($sql) === TRUE) {
+		    echo "New comment added successfully";
+		} else {
+		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
+		}
 	}
 }
 ?>

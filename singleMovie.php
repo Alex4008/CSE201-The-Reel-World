@@ -3,8 +3,12 @@
 	session_start();
   $movieManager = new MovieManager($mysqli);
 	$commentManager = new CommentManager($mysqli);
-?>
 
+	if (isset($_POST['commentText'])) {
+		$commentManager -> addComment($_POST['userId'], $_POST['movieId'], $_POST['commentText']);
+	}
+?>
+<!-- Guest user ID is 52 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +31,31 @@
 		 margin: 10px;
 	 }
 	</style>
+	<script type="text/javascript">
+		$(function() {
+			$('#postComment').on('click', function() {
+				let userId = $(this).attr('userId');
+				let movieId = $(this).attr('movieId');
+				let commentText = $('#commentText').val();
+				console.log(userId);
+				console.log(movieId);
+				console.log(commentText);
+
+				$.ajax({
+					url: './singleMovie.php',
+					type: 'POST',
+					data: {
+						movieId: movieId,
+						userId: userId,
+						commentText: commentText
+					},
+					success: function(data) {
+						// location.reload();
+					}
+				});
+			});
+		});
+	</script>
 </head>
 <body style="font-family:Alegreya;background-color:#1e272e;">
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -62,7 +91,7 @@
 	    </form>
 			<ul class="navbar-nav">
 					<li class="nav-item">
-							<a class="nav-link" href="#"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+							<a class="nav-link" href="signup.php"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
 					</li>
 					<li class="nav-item">
 							<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
@@ -99,6 +128,51 @@
 				</div>
 			</div>
 			<div id="commentSection">
+				<div class="addComment">
+					<form method="post">
+						<div class="card mb-3">
+						  <div class="row no-gutters">
+						    <div class="col-sm-1">
+									<?php
+										if (isset($_SESSION['loggedIn'])) {
+											echo '<img src="https://api.adorable.io/avatars/200/'.$_SESSION['userName'].'" class="card-img" alt="'.$_SESSION['userName'].'">';
+										} else {
+											echo '<img src="https://api.adorable.io/avatars/200/guest-user" class="card-img" alt="Guest">';
+										}
+									?>
+						    </div>
+						    <div class="col-sm-11">
+						      <div class="card-body">
+						        <h5 class="card-title"><b>
+											<?php
+												if (isset($_SESSION['loggedIn'])) {
+													echo $_SESSION['userName'];
+												} else {
+													echo 'Guest User';
+												}
+											?>
+										</b></h5>
+										<textarea class="form-control card-text" rows="1" id="commentText"></textarea>
+						      </div>
+						    </div>
+						  </div>
+							<div class="row">
+								<div class="col">
+									<div class="text-right">
+										<?php
+											if (isset($_SESSION['loggedIn'])) {
+												echo '<button type="button" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="'.$_SESSION['userId'].'">POST</button>';
+											} else {
+												echo '<button type="button" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="52">POST</button>';
+											}
+										?>
+										<button type="reset" class="btn btn-secondary cButton">CANCEL</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
 				<div class="commentLine ">
 					<?php
 						$statement = $commentManager -> getCommentsByMovie($movieId);
@@ -108,10 +182,10 @@
 							$content .= '
 							<div class="card mb-3">
 								<div class="row no-gutters">
-									<div class="col-md-1">
+									<div class="col-sm-1">
 										<img src="https://api.adorable.io/avatars/200/'.$row['userName'].'" class="card-img" alt="'.$row['userName'].'">
 									</div>
-									<div class="col-md-11">
+									<div class="col-sm-11">
 										<div class="card-body">
 											<h5 class="card-title"><b>'.$row['userName'].'</b></h5>
 											<p class="card-text">'.$row['commentText'].'</p>
@@ -123,45 +197,6 @@
 						}
 						print $content;
 					?>
-				</div>
-				<div class="addComment">
-					<form method="post">
-						<div class="card mb-3">
-						  <div class="row no-gutters">
-						    <div class="col-md-1">
-									<?php
-										if (isset($_SESSION['loggedIn'])) {
-											echo '<img src="https://api.adorable.io/avatars/200/'.$_SESSION['userName'].'" class="card-img" alt="'.$_SESSION['userName'].'">';
-										} else {
-											echo '<img src="https://api.adorable.io/avatars/200/guest-user" class="card-img" alt="Guest">';
-										}
-									?>
-						    </div>
-						    <div class="col-md-11">
-						      <div class="card-body">
-						        <h5 class="card-title"><b>
-											<?php
-												if (isset($_SESSION['loggedIn'])) {
-													echo $_SESSION['userName'];
-												} else {
-													echo 'Guest User';
-												}
-											?>
-										</b></h5>
-										<textarea class="form-control card-text" rows="1"></textarea>
-						      </div>
-						    </div>
-						  </div>
-							<div class="row">
-								<div class="col">
-									<div class="text-right">
-										<button type="button" class="btn btn-danger cButton">POST</button>
-										<button type="button" class="btn btn-secondary cButton">CANCEL</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
 				</div>
 			</div>
 		</div>

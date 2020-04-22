@@ -19,7 +19,7 @@
 							<input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" required>
 							<label for="password">Password</label>
 							<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-							<p>Don't have an account? Sign up <a href='#'>here</a>.</p>
+							<p>Don't have an account? Sign up <a href='signup.php'>here</a>.</p>
 							<div class="text-right"><button type="submit" class="btn btn-danger">Login</button></div>
 				</form>
 				<?php

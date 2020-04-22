@@ -133,7 +133,7 @@ $(function(){
       });
       // console.log(JSON.stringify(data));
       $.ajax({
-        url: './saveRequest.php',
+        url: './saveData.php',
         type: 'POST',
         data: {
           data: JSON.stringify(data)
