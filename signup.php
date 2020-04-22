@@ -20,35 +20,11 @@
   <!-- Add text font -->
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
   <script src="multiselect-plugin/dist/js/BsMultiSelect.js"></script>
-
+  <script src="sanitize.js"></script>
 	<style>
-		.holder {
-      margin:0 auto;
-      padding:20px;
-      text-align: center;
-		}
-
     form {
       margin:0 auto;
       margin-top:20px;
-      padding:20px;
-    }
-
-    .mainButton {
-      margin: 10px 0 0 0;
-    }
-
-    #message {
-			text-align: center;
-			margin:0 auto;
-			margin-top:20px;
-			color: white;
-		}
-
-    .info {
-      margin:0 auto;
-      margin-top:20px;
-      margin-bottom: 20px;
       padding:20px;
     }
 
@@ -57,16 +33,16 @@
       color:#8c1f2b;
     }
 	</style>
+  <script src="sanitize.js"></script>
 	<script>
     $(function() {
       $('#userNameExists').hide();
 
       $('#newUserName').on('keyup change blur', function() {
-        let newUserName = $(this).val().trim();
-        console.log(newUserName);
+        let newUserName = sanitize($(this).val().trim());
         if (newUserName !== '') {
           $.ajax({
-            url: './saveData.php',
+            url: './processData.php',
             type: 'POST',
             data: {
               userNameToCheck: newUserName
@@ -89,12 +65,12 @@
 
       $('#signupForm').on('submit', function(event) {
         event.preventDefault();
-        let newUserName = $('#newUserName').val();
-        let newPassword = $('#newPassword').val();
-        let displayName = $('#displayName').val();
+        let newUserName = sanitize($('#newUserName').val());
+        let newPassword = sanitize($('#newPassword').val());
+        let displayName = sanitize($('#displayName').val());
 
         $.ajax({
-          url: './saveData.php',
+          url: './processData.php',
           type: 'POST',
           data: {
             newUserName: newUserName,
@@ -110,6 +86,7 @@
               $('#status').text('There is an error. Please try again later!');
             }
             $('#signupStatus').modal();
+            $('#signupForm')[0].reset();
           }
         });
       });

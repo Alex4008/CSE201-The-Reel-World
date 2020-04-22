@@ -91,8 +91,8 @@ $(function(){
     if ($('#requestForm')[0].checkValidity()) {
       e.preventDefault();
       var data = {
-        movieTitle: $('#movieTitle').val(),
-        movieDescription: $('#movieDescription').val(),
+        movieTitle: sanitize($('#movieTitle').val()),
+        movieDescription: sanitize($('#movieDescription').val()),
         genres: [],
         newGenreDescription: [],
         genreToDisplay: [],
@@ -105,35 +105,36 @@ $(function(){
       }
 
       $('#movieGenres option:selected').each(function() {
-        data.genreToDisplay.push($(this).text());
+        data.genreToDisplay.push(sanitize($(this).text()));
         data.genres.push($(this).val());
       });
 
       $('.newGenreDescription').each( function() {
         if ($(this).val() !== "") {
-          data.newGenreDescription.push($(this).val());
-          data.genreToDisplay.push($(this).val());
+          let gVal = sanitize($(this).val());
+          data.newGenreDescription.push(gVal);
+          data.genreToDisplay.push(gVal);
         }
       });
 
       $('#movieActors option:selected').each(function() {
-        data.actorToDisplay.push($(this).text());
+        data.actorToDisplay.push(sanitize($(this).text()));
         data.actors.push($(this).val());
       });
 
       $('.lineActor').each( function() {
         if ($(this).find('.newActorName').val() !== "") {
           let actor = {
-            actorName:  $(this).find('.newActorName').val(),
-            actorLink: $(this).find('.newActorLink').val()
+            actorName:  sanitize($(this).find('.newActorName').val()),
+            actorLink: sanitize($(this).find('.newActorLink').val())
           }
           data.newActors.push(actor);
-          data.actorToDisplay.push($(this).find('.newActorName').val());
+          data.actorToDisplay.push(sanitize($(this).find('.newActorName').val()));
         }
       });
       // console.log(JSON.stringify(data));
       $.ajax({
-        url: './saveData.php',
+        url: './processData.php',
         type: 'POST',
         data: {
           data: JSON.stringify(data)

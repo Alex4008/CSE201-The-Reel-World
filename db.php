@@ -203,7 +203,7 @@ final class CommentManager
 	}
 
 	public function getCommentsByMovie ($movieId) {
-		$sql = "SELECT c.commentId, u.userName, c.commentText
+		$sql = "SELECT c.commentId, u.userName, u.displayName, c.commentText
 		FROM Comments c
 		JOIN Users u ON c.userId = u.userId
 		WHERE c.movieId = ".$movieId."
@@ -215,7 +215,7 @@ final class CommentManager
 		// }
 
 		$statement = $this -> mysqli -> prepare($sql);
-		$statement -> bind_result($commentId, $userName, $commentText);
+		$statement -> bind_result($commentId, $userName, $displayName, $commentText);
 		$statement -> execute();
 		return $statement;
 	}

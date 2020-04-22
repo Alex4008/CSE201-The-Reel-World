@@ -31,12 +31,13 @@
 		 margin: 10px;
 	 }
 	</style>
+	<script src="sanitize.js"></script>
 	<script type="text/javascript">
 		$(function() {
 			$('#postComment').on('click', function() {
 				let userId = $(this).attr('userId');
 				let movieId = $(this).attr('movieId');
-				let commentText = $('#commentText').val();
+				let commentText = sanitize($('#commentText').val());
 				console.log(userId);
 				console.log(movieId);
 				console.log(commentText);
@@ -50,7 +51,7 @@
 						commentText: commentText
 					},
 					success: function(data) {
-						// location.reload();
+						location.reload();
 					}
 				});
 			});
@@ -91,10 +92,10 @@
 	    </form>
 			<ul class="navbar-nav">
 					<li class="nav-item">
-							<a class="nav-link" href="signup.php"><span class="glyphicon glyphicon-user"></span>SIGN UP</a>
+							<a class="nav-link" href="signup.php">SIGN UP</a>
 					</li>
 					<li class="nav-item">
-							<a class="nav-link" data-toggle="modal" data-target="#loginModal"><span class="glyphicon glyphicon-log-in"></span>LOGIN</a>
+							<a class="nav-link" data-toggle="modal" data-target="#loginModal" id="loginLink">LOGIN</a>
 					</li>
 			</ul>
 	  </div>
@@ -146,7 +147,11 @@
 						        <h5 class="card-title"><b>
 											<?php
 												if (isset($_SESSION['loggedIn'])) {
-													echo $_SESSION['userName'];
+													if ($_SESSION['displayName'] != "") {
+														echo $_SESSION['displayName'];
+													} else {
+														echo $_SESSION['userName'];
+													}
 												} else {
 													echo 'Guest User';
 												}
@@ -187,7 +192,13 @@
 									</div>
 									<div class="col-sm-11">
 										<div class="card-body">
-											<h5 class="card-title"><b>'.$row['userName'].'</b></h5>
+											<h5 class="card-title"><b>';
+											if ($row['displayName'] != "") {
+												$content.= $row['displayName'];
+											} else {
+												$content.= $row['userName'];
+											}
+											$content.= '</b></h5>
 											<p class="card-text">'.$row['commentText'].'</p>
 										</div>
 									</div>

@@ -57,6 +57,7 @@
       color:#8c1f2b;
     }
 	</style>
+  <script src="sanitize.js"></script>
 	<script src="addrequest.js"></script>
 </head>
 	<body style="font-family:Alegreya;background-color:#1e272e;">

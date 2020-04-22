@@ -1,7 +1,33 @@
 <?php
   require_once 'db.php';
-  $userManager = new UserManager($mysqli);
 ?>
+<script src="sanitize.js"></script>
+<script type="text/javascript">
+  $(function() {
+    $('#loginForm').on('submit', function(event) {
+      event.preventDefault();
+      let userName = sanitize($('#userName').val());
+      let password = sanitize($('#password').val());
+
+      $.ajax({
+        url: './processData.php',
+        type: 'POST',
+        data: {
+          userName: userName,
+          password: password
+        },
+        success: function(data) {
+          if (data == 1) {
+            location.reload();
+          } else {
+            $('#errorMessage').text(data);
+          }
+
+        }
+      });
+    });
+  });
+</script>
 
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -13,37 +39,16 @@
         </button>
       </div>
       <div class="modal-body">
-				<form class="bg-light text-dark rounded" method="post">
+				<form class="bg-light text-dark rounded" method="post" id="loginForm">
 							<label for="userName">Username</label>
               <!-- some pattern checking may be needed  -->
 							<input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" required>
 							<label for="password">Password</label>
 							<input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
 							<p>Don't have an account? Sign up <a href='signup.php'>here</a>.</p>
+              <small style="color:red;" id="errorMessage"></small>
 							<div class="text-right"><button type="submit" class="btn btn-danger">Login</button></div>
 				</form>
-				<?php
-					if (isset($_POST['userName']) && isset($_POST['password'])) {
-            //  sanitize input if have time
-						$result = $userManager -> login($_POST['userName'], $_POST['password']) -> get_result();
-						$count = 0;
-						while($row = $result->fetch_assoc()) {
-							$_SESSION['userId'] = $row['userId'];
-							$_SESSION['userName'] = $row['userName'];
-							$_SESSION['displayName'] = $row['displayName'];
-              $_SESSION['role'] = $row['roleName'];
-              // print('<script>console.log("'.$_SESSION['role'].'")</script>');
-							$count += 1;
-						}
-
-						if ($count === 1) {
-							$_SESSION['loggedIn'] = true;
-							header('Location: '.$_SERVER['REQUEST_URI']);
-						} else {
-							print('<div class="errorMessage">No such user found. Please try again.</div>');
-						}
-					}
-				?>
       </div>
     </div>
   </div>
