@@ -77,13 +77,16 @@
 		<div class="navbar-nav ml-auto w-60 order-3">
 			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
 				<div class="input-group">
+					// Creating the search bar and giving it a placeholder
 					<input type="text" class="form-control" id="Search" name="Search" placeholder="Search...">
 					<span class="input-group-btn">
+						// Creating a Go button that submits the form with the text input from the search bar
 						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;" id="GO" name="GO">GO</button>
 					</span>
 				</div>
 				<div>
 				<div class="btn-group" style="margin:5px;margin-left:10px;">
+				  // Creating a Sort button with a dropdown arrow and two options
 				  <button type="button" class="btn btn-danger" id="sortButton" name="sortButton" value="SORT">SORT</button>
 				  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    <span class="sr-only">Toggle Dropdown</span>
@@ -91,15 +94,17 @@
 				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="classSortOptions">
                     <div class="font-weight-bold" style="margin-left:10px;">Sort</div>
                     <form class="px-4 py-3 rounded" id="sortOptions" method="post">
-
+		    // The first option is to sort alphabetically by the title
                     <div class="form-group" style="margin-left:10px;">
                      <input type="checkbox" class="form-check-input" id="By title" value="By title" name="sortTitle">
                     <label for="By title">By title</label>
                         </div>
+		    // The second option is to sort by rating
                     <div class="form-group" style="margin-left:10px;">
                       <input type="checkbox" class="form-check-input" id="By rating" value="By rating" name="sortRating">
                         <label for="By rating">By rating</label>
                         </div>
+			// Creating an OK button to submit the form
                         <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
                       </form>
 				  </ul>
@@ -179,20 +184,19 @@ function getPostGenres() {
 //    return $result;
 //}
 $selectedGenre = getPostGenres();
-
+// This checks if the sort, filter search, or movieIDs functions have been called
 if (!isset($_POST['genre']) && !isset($_POST['movieIds']) && !isset($_POST['sortTitle']) && !isset($_POST['sortRating']) && $_POST['Search'] == "")
     $statement = $movieManager->getAllMovies(); //This runs the function from the db.php file and returns the MySQL statement results.
 else if (isset($_POST['genre'])) {
     $statement = $movieManager->getCheckedGenres($selectedGenre);
 }
-else if (isset($_POST['sortTitle'])) {
+else if (isset($_POST['sortTitle'])) { // If the user selects to sort by title then the get allMovies method is called
     $statement = $movieManager->getAllMovies();
 }
-else if (isset($_POST['sortRating'])) {
+else if (isset($_POST['sortRating'])) { // If the user selects to sort by rating then the get allMoviesByRating method is called
     $statement = $movieManager->getAllMoviesByRating();
 }
-else if ($_POST['Search'] != "") {
-    print "<p>Going</p>";
+else if ($_POST['Search'] != "") {  // If the search bar contains text then it is passed to the getAllMoviesByKeyword method is called
     $statement = $movieManager->getAllMoviesByKeyword($_POST['Search']);
 }
 
