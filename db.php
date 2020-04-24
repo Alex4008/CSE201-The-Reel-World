@@ -41,7 +41,9 @@ final class MovieManager
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query
 	}
-    
+
+    // A function that gets all the movies from the database that match a string
+    // $keyword is the string used to search the database
     public function getAllMoviesByKeyword($keyword) {
           $statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors
 			FROM Movies m
@@ -54,7 +56,7 @@ final class MovieManager
 		$statement->execute(); // Executing the query
 		return $statement; // Return the results from the query    
     }
-    
+    // A function that gets all the movies from the database and orders them by their rating
     public function getAllMoviesByRating() {
 		$statement = $this->mysqli->prepare("SELECT m.title, m.movieId, m.requestId, m.description, m.keywords, m.imdbLink, m.image, m. imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors
 			FROM Movies m
