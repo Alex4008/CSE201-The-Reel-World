@@ -3,13 +3,6 @@
 	$requestManager = new RequestManager($mysqli);
 	session_start();
 ?>
-
-<?php
-	// When cancel button is clicked and the reqestId is sent back
-	if (isset($_POST['requestId'])) {
-		$requestManager -> deleteRequest($_POST['requestId']);
-	}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   <link href='https://fonts.googleapis.com/css?family=Alegreya' rel='stylesheet'>
-
+	<script src="sanitize.js"></script>
 	<style>
 		#message {
 			text-align: center;
@@ -37,23 +30,45 @@
 
 	</style>
 	<script>
-		$(document).ready (function() {
-			$('.cancelButton').on('click', function() {
+		$(function() {
+			// Approve/Decline button is clicked -> Send POST request and info to processData
+			$('.approveButton').on('click', function() {
 				let requestId = $(this).attr('requestId');
+				let comment = sanitize($('#requestComment' + requestId).val());
+
 				$.ajax({
-					url: './requests.php',
+					url: './processData.php',
 					type: 'POST',
 					data: {
+						method: 'approveRequest',
+						comment: comment,
 						requestId: requestId
 					},
 					success: function(data) {
-						console.log(data);
-						window.alert("Request #" + requestId + " is successfully cancelled");
+						location.reload();
+					}
+				});
+			});
+
+			$('.declineButton').on('click', function() {
+				let requestId = $(this).attr('requestId');
+				let comment = sanitize($('#requestComment' + requestId).val());
+
+				$.ajax({
+					url: './processData.php',
+					type: 'POST',
+					data: {
+						method: 'declineRequest',
+						comment: comment,
+						requestId: requestId
+					},
+					success: function(data) {
 						location.reload();
 					}
 				});
 			});
 		});
+
 	</script>
 </head>
 	<body style="font-family:Alegreya;background-color:#1e272e;">
@@ -70,13 +85,13 @@
 				  <li class="nav-item ">
 				    <a class="nav-link navTab" href="index.php">Home<span class="sr-only">(current)</span></a>
 				  </li>
-				  <li class="nav-item active">
+				  <li class="nav-item">
 				    <a class="nav-link navTab" href="requests.php">My Requests</a>
 				  </li>
 				  <?php
 				    if ($_SESSION['loggedIn'] && $_SESSION['role'] == 'Admin') {
 				      $item = '
-				      <li class="nav-item">
+				      <li class="nav-item active">
 				        <a class="nav-link navTab" href="pendingRequests.php">Pending Requests</a>
 				      </li>';
 
@@ -103,15 +118,17 @@
 			<?php
 				if (!isset($_SESSION['loggedIn'])) {
 					print '<div id="message">Please <a href="" data-toggle="modal" data-target="#loginModal">log in</a> first.</div>';
+				} elseif ($_SESSION['role'] !== 'Admin') {
+					print '<div id="message">This page is for admin only.</div>';
 				} else {
 					$content = '';
-					$statement = $requestManager -> getRequests($_SESSION['userId']); //Gets all requests belonging to this user
+					$statement = $requestManager -> getRequests('*'); //Gets all the requests that is not approved/declined
 					$result = $statement -> get_result();
 
-					while ($row = $result -> fetch_assoc()) { // Populate the page with this user's requests
+					while ($row = $result -> fetch_assoc()) { // Loops through all requests and populate the page
 						$requestDescription = $row['description'];
 						if ($requestDescription != "") {
-							$info = json_decode($requestDescription, true); // Request description is encoded and thus needs to be decoded
+							$info = json_decode($requestDescription, true);
 
 							$content = $content.'
 							<div class="card mb-3 requestCard">
@@ -125,32 +142,23 @@
 											<p class="card-text">Genres: '.implode(", ", $info['genreToDisplay']).'</p>
 											<p class="card-text">Actors: '.implode(", ", $info['actorToDisplay']).'</p>
 											<p class="card-text">Description: '.$info['movieDescription'].'</p>
-											<p class="card-text">Rating: '.$info['movieRating'].' /10</p>';
-											if (isset($info['requestComment'])) {
-												$content = $content.'<p class="card-text"><small class="text-muted">Comments: '.$info['requestComment'].'</small></p>';
-											}
-
-											$content = $content.'
+											<p class="card-text">Rating: '.$info['movieRating'].' /10</p>
 											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
-											<div class="text-right">
-												<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							';
-						} else {
-							$content = $content.'
-							<div class="card mb-3 requestCard">
-								<div class="row no-gutters">
-									<div class="col-md-12">
-										<div class="card-body">
-											<h5 class="card-title">'.$row['requestName'].'</h5>
-											<p class="card-text">Request Description: '.$row['description'].'</p>
-											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
-											<div class="text-right">
-												<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
+											<div>
+												<form>
+													<div class="row">
+														<div class="col-lg-9">
+															<div class="form-group">
+																<label for="requestComment"><b>Comments</b></label>
+																<textarea id="requestComment'.$row['requestId'].'" class="form-control" rows="2" placeholder="Add request comments"></textarea>
+															</div>
+														</div>
+														<div class="col-lg-3 text-right" style="margin-top: 30px;">
+															<button type="button" class="btn btn-danger approveButton" requestId="'.$row['requestId'].'">Approve</button>
+															<button type="button" class="btn btn-secondary declineButton" style="margin-left:5px;" requestId="'.$row['requestId'].'">Decline</button>
+														</div>
+													</div>
+												</form>
 											</div>
 										</div>
 									</div>

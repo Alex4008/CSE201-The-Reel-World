@@ -5,10 +5,13 @@
 <script type="text/javascript">
   $(function() {
     $('#loginForm').on('submit', function(event) {
+      // When log in form is submitted
       event.preventDefault();
+      // Collects the data
       let userName = sanitize($('#userName').val());
       let password = sanitize($('#password').val());
 
+      // And send request to processData to log user in
       $.ajax({
         url: './processData.php',
         type: 'POST',
@@ -39,7 +42,7 @@
         </button>
       </div>
       <div class="modal-body">
-				<form class="bg-light text-dark rounded" method="post" id="loginForm">
+				<form class="bg-light text-dark rounded" id="loginForm">
 							<label for="userName">Username</label>
               <!-- some pattern checking may be needed  -->
 							<input type="text" class="form-control" id="userName" name="userName" placeholder="Enter username" required>

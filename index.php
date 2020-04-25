@@ -77,16 +77,16 @@
 		<div class="navbar-nav ml-auto w-60 order-3">
 			<form class="form-inline my-2 my-lg-0 navbar-nav ml-auto" method="post">
 				<div class="input-group">
-					// Creating the search bar and giving it a placeholder
+					<!-- Creating the search bar and giving it a placeholder -->
 					<input type="text" class="form-control" id="Search" name="Search" placeholder="Search...">
 					<span class="input-group-btn">
-						// Creating a Go button that submits the form with the text input from the search bar
+						<!-- Creating a Go button that submits the form with the text input from the search bar -->
 						<button class="btn btn-default" type="submit" style="background-color:#c0c3c5;color:#053560;" id="GO" name="GO">GO</button>
 					</span>
 				</div>
 				<div>
 				<div class="btn-group" style="margin:5px;margin-left:10px;">
-				  // Creating a Sort button with a dropdown arrow and two options
+				  <!-- Creating a Sort button with a dropdown arrow and two options -->
 				  <button type="button" class="btn btn-danger" id="sortButton" name="sortButton" value="SORT">SORT</button>
 				  <button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				    <span class="sr-only">Toggle Dropdown</span>
@@ -94,17 +94,17 @@
 				  <ul class="dropdown-menu bg-secondary text-white" style="color:white;" id="classSortOptions">
                     <div class="font-weight-bold" style="margin-left:10px;">Sort</div>
                     <form class="px-4 py-3 rounded" id="sortOptions" method="post">
-		    // The first option is to sort alphabetically by the title
+		     <!-- The first option is to sort alphabetically by the title -->
                     <div class="form-group" style="margin-left:10px;">
                      <input type="checkbox" class="form-check-input" id="By title" value="By title" name="sortTitle">
                     <label for="By title">By title</label>
                         </div>
-		    // The second option is to sort by rating
+		    <!-- The second option is to sort by rating -->
                     <div class="form-group" style="margin-left:10px;">
                       <input type="checkbox" class="form-check-input" id="By rating" value="By rating" name="sortRating">
                         <label for="By rating">By rating</label>
                         </div>
-			// Creating an OK button to submit the form
+			<!-- Creating an OK button to submit the form -->
                         <button type="submit" class="btn btn-danger align-right" style="margin:10px; float:right; margin-bottom: 5px;">OK</button>
                       </form>
 				  </ul>
@@ -214,7 +214,7 @@ while($row = $result->fetch_assoc()) {
 
 		// Build card
 		print '<div class="card col-md movie" movieId="'.$row['movieId'].'" style="margin:5px;padding:0px;border-color:white;">';
-		print '<a href= "singleMovie.php?title=' . $row['title'] .'">';
+		print '<a href= "singleMovie.php?title=' . $row['title'].'">';
 		print '<img src="' . $row['imageAddress'] . '" width="190px" height="150px" class="card-img-top" alt="' . $row['title'] . '">';
 		print '</a>';
 
@@ -231,6 +231,6 @@ print '</div>'; // Close the ending row
 print '</div>'; // Close the container
 
 ?>
-
+<?php  ?>
 </body>
 </html>

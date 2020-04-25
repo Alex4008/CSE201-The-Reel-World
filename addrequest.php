@@ -124,7 +124,7 @@
                   </div>
                 </div>
                 <div class ="row">
-                  <div class="form-group col-lg-12">
+                  <div class="form-group col-lg-8">
                     <label for="movieGenres">Genres</label>
                     <div class="genres">
                       <select name="genres[]" id="movieGenres" class="form-control"  multiple="multiple" style="display: none;">';
@@ -152,6 +152,13 @@
                         Add new genres
                       </button>
                     </p>
+                  </div>
+                  <div class="form-group col-lg-3">
+                    <label for="movieRating">Rating (0-10)</label>
+                    <input class="form-control" type="number" min="0" max="10" step="any" name="movieRating" id="movieRating" placeholder="Enter rating" required/>
+                  </div>
+                  <div class="col-lg-1" style="margin-top:40px;">
+                    <span>/10</span>
                   </div>
                 </div>
                 <div id="addGenreField">

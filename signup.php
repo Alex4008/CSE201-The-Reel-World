@@ -37,7 +37,7 @@
 	<script>
     $(function() {
       $('#userNameExists').hide();
-
+      // Checks the availability of the userName as user types in
       $('#newUserName').on('keyup change blur', function() {
         let newUserName = sanitize($(this).val().trim());
         if (newUserName !== '') {
@@ -63,6 +63,7 @@
         }
       });
 
+      // Submit the signup form
       $('#signupForm').on('submit', function(event) {
         event.preventDefault();
         let newUserName = sanitize($('#newUserName').val());

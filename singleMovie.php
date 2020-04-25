@@ -108,7 +108,7 @@
 			<div class="col-lg-11">
 			<?php
 				$statement = $movieManager->getSingleMovie($_REQUEST['title']); //This runs the function from the db.php file and returns the MySQL statement results.
-
+				//print('<script>console.log("'.json_encode($statement, JSON_HEX_TAG).'");</script>');
 			  $result = $statement->get_result(); // Gets the results from the query
 				$movieId = null;
 			  while ($row = $result->fetch_assoc()) {
@@ -180,10 +180,10 @@
 				</div>
 				<div class="commentLine ">
 					<?php
-						$statement = $commentManager -> getCommentsByMovie($movieId);
+						$statement = $commentManager -> getCommentsByMovie($movieId); // Gets all comments belonging to this movie
 						$result = $statement -> get_result();
 						$content = '';
-						while ($row = $result->fetch_assoc()) {
+						while ($row = $result->fetch_assoc()) { // Displays all the comments
 							$content .= '
 							<div class="card mb-3">
 								<div class="row no-gutters">

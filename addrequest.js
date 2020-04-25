@@ -4,6 +4,7 @@ $(function(){
   var maxActorLine = 20;
   var countActorLine = 1;
 
+  // Responsive features of the form
   $("select").bsMultiSelect();
   $('#addGenreField').hide();
   $('#addActorField').hide();
@@ -86,8 +87,9 @@ $(function(){
     $(this).closest('.lineActor').remove();
   });
 
+  // When the request form is submitted
   $('#submitButton').on('click', function(e) {
-
+    // Checks if the form is valid and collect form fields
     if ($('#requestForm')[0].checkValidity()) {
       e.preventDefault();
       var data = {
@@ -96,10 +98,10 @@ $(function(){
         genres: [],
         newGenreDescription: [],
         genreToDisplay: [],
+        movieRating: sanitize($('#movieRating').val()),
         actors: [],
         newActors: [],
         actorToDisplay: [],
-
         imdbLink: $('#imdbLink').val(),
         imageLink: $('#imageLink').val()
       }
@@ -132,7 +134,7 @@ $(function(){
           data.actorToDisplay.push(sanitize($(this).find('.newActorName').val()));
         }
       });
-      // console.log(JSON.stringify(data));
+      // Sends a POST request to the DB and process the request
       $.ajax({
         url: './processData.php',
         type: 'POST',
