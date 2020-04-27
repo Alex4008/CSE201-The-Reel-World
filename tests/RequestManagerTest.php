@@ -20,19 +20,19 @@ final class RequestManagerTest extends TestCase
         );
     }
     
-    // Testing if getAllRequests() returns more than zero requests
-    // Assumes there is at least 1 request in database 
-    public function testCanGetAllRequests(): void
-    {
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $statement = $mm->getAllRequests();
-        $result = $statement->store_result();
-        
-        $this->assertGreaterThan(
-            0,
-            $statement->num_rows
-        );
-    }
+//    // Testing if getAllRequests() returns more than zero requests
+//    // Assumes there is at least 1 request in database 
+//    public function testCanGetAllRequests(): void
+//    {
+//        $mm = new RequestManager($GLOBALS['mysqli']);
+//        $statement = $mm->getAllRequests();
+//        $result = $statement->store_result();
+//        
+//        $this->assertGreaterThan(
+//            0,
+//            $statement->num_rows
+//        );
+//    }
     
     // Testing if saveRequest() adds a request to the database
     public function testCanSaveRequest(): void
@@ -84,6 +84,54 @@ final class RequestManagerTest extends TestCase
         $this->cleanUpTest();
     }
     
+    // Testing if getRequestById() returns exactly one request
+    public function testCanGetRequestById(): void
+    {
+        $this->cleanUpTest();
+        $this->setUpTest();
+        $requestId = $this->addTestRequest();
+        
+        $mm = new RequestManager($GLOBALS['mysqli']);
+        $row = $mm->getRequestById($requestId);
+        
+        $this->assertNotEquals(
+            null,
+            $row
+        );
+        
+        $this->cleanUpTest();
+    }
+    
+    // Testing if updateRequest() updates the request description in the database 
+    public function testCanUpdateRequest(): void
+    {
+        $updateTestDes = "unittestdescriptionupdate";
+        
+        $this->cleanUpTest();
+        $this->setUpTest();
+        $requestId = $this->addTestRequest();
+        
+        $mm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $mm->updateRequest($requestId, $updateTestDes, 'Approved');
+        
+        $sql = "SELECT description FROM Requests WHERE requestId = '" . $requestId . "'";
+        $sqlResult = $GLOBALS['mysqli']->query($sql);
+        
+        $this->assertGreaterThan(
+            0,
+            $sqlResult->num_rows
+        );
+        
+        $row = $sqlResult->fetch_assoc();
+        
+        $this->assertEquals(
+            $updateTestDes,
+            $row["description"]
+        );
+                
+        $this->cleanUpTest();
+    }
+    
     // Testing if deleteRequest() deletes request from database
     public function testCanDeleteRequest(): void
     {            
@@ -100,54 +148,6 @@ final class RequestManagerTest extends TestCase
         $this->assertEquals(
             0,
             $sqlResult->num_rows
-        );
-                
-        $this->cleanUpTest();
-    }
-    
-    // Testing if getSingleRequest() returns exactly one request
-    public function testCanGetSingleRequest(): void
-    {
-        $this->cleanUpTest();
-        $this->setUpTest();
-        $requestId = $this->addTestRequest();
-        
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $statement = $mm->getSingleRequest($requestId);
-        $result = $statement->store_result();
-        
-        $this->assertEquals(
-            1,
-            $statement->num_rows
-        );
-        
-        $this->cleanUpTest();
-    }
-    
-    // Testing if getRequestDescription() returns the request description 
-    public function testCanGetRequestDescription(): void
-    {            
-        $this->cleanUpTest();
-        $this->setUpTest();
-        $requestId = $this->addTestRequest();
-        
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $statement = $mm->getRequestDescription($requestId);
-        $result = $statement->store_result();
-        
-        $sql = "SELECT description FROM Requests WHERE requestId = '" . $requestId . "'";
-        $sqlResult = $GLOBALS['mysqli']->query($sql);
-                
-        $this->assertGreaterThan(
-            0,
-            $sqlResult->num_rows
-        );
-        
-        $row = $sqlResult->fetch_assoc();
-        
-        $this->assertEquals(
-            $testRequestDescription,
-            $row["description"]
         );
                 
         $this->cleanUpTest();

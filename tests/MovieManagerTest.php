@@ -29,6 +29,20 @@ final class MovieManagerTest extends TestCase
         );
     }
     
+    // Testing if getAllMoviesByKeyword() returns movies that match keyword
+    // Assumes that there is at least one movie with keyword 'man'
+    public function testCanGetAllMoviesByKeyword(): void
+    {
+        $mm = new MovieManager($GLOBALS['mysqli']);
+        $statement = $mm->getAllMoviesByKeyword('man');
+        $result = $statement->store_result();
+        
+        $this->assertGreaterThan(
+            0,
+            $statement->num_rows
+        );
+    }
+    
     // Testing if getAllMoviesByRating() returns more than zero movies
     // Assumes there is at least 1 movie in database
     public function testCanGetAllMoviesByRating(): void
@@ -85,19 +99,19 @@ final class MovieManagerTest extends TestCase
         );
     }
     
-    // Testing if getCheckedGenres() can get movies of a genre when movies of that genre do not exist
-    // Assumes there are 0 movies with genre 'fantasy' 
-    public function testCanGetNotMatchedGenres(): void
-    {
-        $mm = new MovieManager($GLOBALS['mysqli']);
-        $statement = $mm->getCheckedGenres(array('fantasy'));
-        $result = $statement->store_result();
-        
-        $this->assertEquals(
-            0,
-            $statement->num_rows
-        );
-    }
+//    // Testing if getCheckedGenres() can get movies of a genre when movies of that genre do not exist
+//    // Assumes there are 0 movies with genre 'fantasy' -- test not necessary -- assumption false
+//    public function testCanGetNotMatchedGenres(): void
+//    {
+//        $mm = new MovieManager($GLOBALS['mysqli']);
+//        $statement = $mm->getCheckedGenres(array('fantasy'));
+//        $result = $statement->store_result();
+//        
+//        $this->assertEquals(
+//            0,
+//            $statement->num_rows
+//        );
+//    }
     
     // Testing if getSingleMovie() returns exactly one movie
     // Assumes there is a movie with title 'cleopatra' 
@@ -111,6 +125,19 @@ final class MovieManagerTest extends TestCase
             1,
             $statement->num_rows
         );
+    }
+    
+    // Testing if addMovie() adds a movie to the database  
+    public function testCanAddMovie(): void
+    {
+//        $mm = new MovieManager($GLOBALS['mysqli']);
+//        $statement = $mm->addMovie('cleopatra');
+//        $result = $statement->store_result();
+//        
+//        $this->assertEquals(
+//            1,
+//            $statement->num_rows
+//        );
     }
 }
 ?>
