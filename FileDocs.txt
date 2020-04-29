@@ -5,8 +5,8 @@ CSE201-The-Reel-World
 	composer.lock
 	db.php
 	fav.ico
-	FileDocs.txt
-	index.php
+	FileDocs.txt - describes each file currently in the reponsitory
+	index.php - home page of our site depicting movie block and functionality options
 	login.php
 	MovieCatalog
 	MovieCatalogBasicQueries.sql
@@ -23,10 +23,10 @@ CSE201-The-Reel-World
 	README.md
 	requests.php
 	sanitize.js
-	signup.php
-	singleMovie.php
+	signup.php - depicts the sign up option to store signed up user in the database
+	singleMovie.php - standard page layout for a single movie option
 	tests (dir)
-		MovieManagerTest.php
-		RequestManagerTest.php
-		UserManagerTest.php
+		MovieManagerTest.php - unit tests for the MovieManager class
+		RequestManagerTest.php - unit tests for the RequestManager class
+		UserManagerTest.php - unit tests for the UserManager class
 	vendor (dir)
