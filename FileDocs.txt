@@ -1,13 +1,13 @@
 CSE201-The-Reel-World
-	addrequest.js
-	addrequest.php
+	addrequest.js - script to add forms based on input
+	addrequest.php - php to process requests
 	composer.json
 	composer.lock
-	db.php
-	fav.ico
+	db.php - includes database connection and queries
+	fav.ico - tab icon
 	FileDocs.txt - describes each file currently in the reponsitory
 	index.php - home page of our site depicting movie block and functionality options
-	login.php
+	login.php - script for login information
 	MovieCatalog
 	MovieCatalogBasicQueries.sql
 	MovieCatalogDummyData2.sql
