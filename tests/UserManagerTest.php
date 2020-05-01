@@ -102,38 +102,38 @@ final class UserManagerTest extends TestCase
     // Testing if checkUsername() given an unused username returns true
     public function testCanCheckUsername(): void 
     {
-//        global $testUsername;
-//        
-//        $this->cleanUpTest();
-//        
-//        $um = new UserManager($GLOBALS['mysqli']);
-//        $statement = $um->checkUsername($testUsername);
-//        
-//        $this->assertEquals(
-//            true,
-//            $statement
-//        );
-//        
-//        $this->cleanUpTest();
+        global $testUsername;
+        
+        $this->cleanUpTest();
+        
+        $um = new UserManager($GLOBALS['mysqli']);
+        $result = $um->checkUsername($testUsername);
+        
+        $this->assertEquals(
+            true,
+            $result
+        );
+        
+        $this->cleanUpTest();
     }
     
     // Testing if checkUsername() given an existing username returns false
     public function testCanCheckInvalidUsername(): void 
     {
-//        global $testUsername;
-//        
-//        $this->cleanUpTest();
-//        $this->setUpTest();
-//        
-//        $um = new UserManager($GLOBALS['mysqli']);
-//        $statement = $um->checkUsername($testUsername);
-//        
-//        $this->assertEquals(
-//            false,
-//            $statement
-//        );
-//        
-//        $this->cleanUpTest();
+        global $testUsername;
+        
+        $this->cleanUpTest();
+        $this->setUpTest();
+        
+        $um = new UserManager($GLOBALS['mysqli']);
+        $result = $um->checkUsername($testUsername);
+        
+        $this->assertEquals(
+            false,
+            $result
+        );
+        
+        $this->cleanUpTest();
     }
     
     // - - - - - HELPER FUNCTIONS - - - - - 
@@ -152,10 +152,14 @@ final class UserManagerTest extends TestCase
     // Cleans up test code
     public function cleanUpTest(): void 
     {
-        global $testUserId; 
+        global $testUserId, $testUsername; 
         
         // Delete test user
         $sql = "DELETE FROM Users WHERE userId = '" . $testUserId . "'";
+        $GLOBALS['mysqli']->query($sql);
+        
+        // Delete test user
+        $sql = "DELETE FROM Users WHERE userName = '" . $testUsername . "'";
         $GLOBALS['mysqli']->query($sql);
     }
 }
