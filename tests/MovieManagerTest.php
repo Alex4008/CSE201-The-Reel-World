@@ -6,6 +6,9 @@ require_once('db.php');
 
 final class MovieManagerTest extends TestCase
 {
+    private $testUserId = null;
+    private $testRequestId = null;
+    
     // Testing if MovieManager object can be created 
     public function testCanBeCreated(): void
     {
@@ -99,20 +102,6 @@ final class MovieManagerTest extends TestCase
         );
     }
     
-//    // Testing if getCheckedGenres() can get movies of a genre when movies of that genre do not exist
-//    // Assumes there are 0 movies with genre 'fantasy' -- test not necessary -- assumption false
-//    public function testCanGetNotMatchedGenres(): void
-//    {
-//        $mm = new MovieManager($GLOBALS['mysqli']);
-//        $statement = $mm->getCheckedGenres(array('fantasy'));
-//        $result = $statement->store_result();
-//        
-//        $this->assertEquals(
-//            0,
-//            $statement->num_rows
-//        );
-//    }
-    
     // Testing if getSingleMovie() returns exactly one movie
     // Assumes there is a movie with title 'cleopatra' 
     public function testCanGetSingleMovie(): void
@@ -127,17 +116,73 @@ final class MovieManagerTest extends TestCase
         );
     }
     
-    // Testing if addMovie() adds a movie to the database  
+    // Testing if addMovie() adds a movie to the database
     public function testCanAddMovie(): void
     {
-//        $mm = new MovieManager($GLOBALS['mysqli']);
-//        $statement = $mm->addMovie('cleopatra');
-//        $result = $statement->store_result();
-//        
-//        $this->assertEquals(
-//            1,
-//            $statement->num_rows
-//        );
+        $this->cleanUpTest();
+        $testRequestId = $this->setUpTest();
+        
+        $mm = new MovieManager($GLOBALS['mysqli']);
+        $mm->addMovie($testRequestId, 'unittesttitle', 'unittestdescription', 'unittestlink', 'unittestimg', '1.0');
+        
+        $sql = "SELECT requestId FROM Movies WHERE requestId = '" . $testRequestId . "'";
+        $sqlResult = $GLOBALS['mysqli']->query($sql);
+        
+        $this->assertGreaterThan(
+            0,
+            $sqlResult->num_rows
+        );
+        
+        $row = $sqlResult->fetch_assoc();
+        
+        $this->assertEquals(
+            $testRequestId,
+            $row["requestId"]
+        );
+        
+        $this->cleanUpTest();
+    }
+    
+    // - - - - - HELPER FUNCTIONS - - - - - 
+    // Inserts test user and test request
+    // Returns request id 
+    public function setUpTest(): int 
+    {
+        global $testUserId;
+        
+        // Inset test user 
+        $sql = "INSERT INTO Users (userName, password, displayName) VALUES ('unittestuser', 'testpassword', 'Testfirst, Testlast')";
+        
+        if ($GLOBALS['mysqli']->query($sql) === TRUE) {
+            $testUserId = $GLOBALS['mysqli']->insert_id;
+        }
+        
+        // Create test request by test user 
+        $sql = "INSERT INTO Requests (userId, requestName, description) VALUES ('" . $testUserId . "', 'unittestname', 'unittestdescription')";
+        
+        if ($GLOBALS['mysqli']->query($sql) === TRUE) {
+            $requestId = $GLOBALS['mysqli']->insert_id;
+        }
+        
+        return $requestId;
+    }
+    
+    // Cleans up test code
+    public function cleanUpTest(): void 
+    {
+        global $testUserId, $testRequestId; 
+        
+        // Delete test movie 
+        $sql = "DELETE FROM Movies WHERE requestId = '" . $testRequestId . "'";
+        $GLOBALS['mysqli']->query($sql);
+        
+        // Delete test user's requests 
+        $sql = "DELETE FROM Requests WHERE userId = '" . $testUserId . "'";
+        $GLOBALS['mysqli']->query($sql);
+        
+        // Delete test user
+        $sql = "DELETE FROM Users WHERE userId = '" . $testUserId . "'";
+        $GLOBALS['mysqli']->query($sql);
     }
 }
 ?>

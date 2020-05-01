@@ -20,20 +20,6 @@ final class RequestManagerTest extends TestCase
         );
     }
     
-//    // Testing if getAllRequests() returns more than zero requests
-//    // Assumes there is at least 1 request in database 
-//    public function testCanGetAllRequests(): void
-//    {
-//        $mm = new RequestManager($GLOBALS['mysqli']);
-//        $statement = $mm->getAllRequests();
-//        $result = $statement->store_result();
-//        
-//        $this->assertGreaterThan(
-//            0,
-//            $statement->num_rows
-//        );
-//    }
-    
     // Testing if saveRequest() adds a request to the database
     public function testCanSaveRequest(): void
     {        
@@ -42,8 +28,8 @@ final class RequestManagerTest extends TestCase
         $this->cleanUpTest();
         $this->setUpTest();
         
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $mm->saveRequest($testUserId, $testRequestName, $testRequestDes);
+        $rm = new RequestManager($GLOBALS['mysqli']);
+        $rm->saveRequest($testUserId, $testRequestName, $testRequestDes);
         
         $sql = "SELECT userId FROM Requests WHERE userId = '" . $testUserId . "'";
         $sqlResult = $GLOBALS['mysqli']->query($sql);
@@ -72,8 +58,8 @@ final class RequestManagerTest extends TestCase
         $this->setUpTest();
         $requestId = $this->addTestRequest();
         
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $statement = $mm->getRequests($testUserId);
+        $rm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $rm->getRequests($testUserId);
         $result = $statement->store_result();
         
         $this->assertEquals(
@@ -91,8 +77,8 @@ final class RequestManagerTest extends TestCase
         $this->setUpTest();
         $requestId = $this->addTestRequest();
         
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $row = $mm->getRequestById($requestId);
+        $rm = new RequestManager($GLOBALS['mysqli']);
+        $row = $rm->getRequestById($requestId);
         
         $this->assertNotEquals(
             null,
@@ -111,8 +97,8 @@ final class RequestManagerTest extends TestCase
         $this->setUpTest();
         $requestId = $this->addTestRequest();
         
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $statement = $mm->updateRequest($requestId, $updateTestDes, 'Approved');
+        $rm = new RequestManager($GLOBALS['mysqli']);
+        $statement = $rm->updateRequest($requestId, $updateTestDes, 'Approved');
         
         $sql = "SELECT description FROM Requests WHERE requestId = '" . $requestId . "'";
         $sqlResult = $GLOBALS['mysqli']->query($sql);
@@ -139,8 +125,8 @@ final class RequestManagerTest extends TestCase
         $this->setUpTest();
         $requestId = $this->addTestRequest();
         
-        $mm = new RequestManager($GLOBALS['mysqli']);
-        $mm->deleteRequest($requestId);
+        $rm = new RequestManager($GLOBALS['mysqli']);
+        $rm->deleteRequest($requestId);
         
         $sql = "SELECT requestId FROM Requests WHERE requestId = '" . $requestId . "'";
         $sqlResult = $GLOBALS['mysqli']->query($sql);

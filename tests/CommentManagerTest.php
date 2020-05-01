@@ -16,16 +16,24 @@ final class CommentManagerTest extends TestCase
     }
     
     // Testing if getCommentsByMovie() returns comments belonging to given movie
+    // Assumes that movie titled 'Amadeus' has at least one comment 
     public function testCanGetCommentsByMovie(): void
     {
-//        $mm = new CommentManager($GLOBALS['mysqli']);
-//        $statement = $mm->getCommentsByMovie();
-//        $result = $statement->store_result();
-//        
-//        $this->assertGreaterThan(
-//            0,
-//            $statement->num_rows
-//        );
+        $movieId = null;
+        
+        $sql = "SELECT movieId FROM Movies WHERE title = 'Amadeus'";
+        if ($GLOBALS['mysqli']->query($sql) === TRUE) {
+            $movieId = $GLOBALS['mysqli']->insert_id;
+        }
+        
+        $cm = new CommentManager($GLOBALS['mysqli']);
+        $statement = $cm->getCommentsByMovie($movieId);
+        $result = $statement->store_result();
+        
+        $this->assertGreaterThan(
+            0,
+            $statement->num_rows
+        );
     }
     
     // Testing if addComment() adds a comment to the database
@@ -34,8 +42,8 @@ final class CommentManagerTest extends TestCase
 //        $this->cleanUpTest();
 //        $this->setUpTest();
 //        
-//        $mm = new CommentManager($GLOBALS['mysqli']);
-//        $mm->addComment();
+//        $cm = new CommentManager($GLOBALS['mysqli']);
+//        $cm->addComment();
 //        
 //        $sql = "SELECT userId FROM Requests WHERE userId = '" . $testUserId . "'";
 //        $sqlResult = $GLOBALS['mysqli']->query($sql);
