@@ -126,10 +126,12 @@
 					$result = $statement -> get_result();
 
 					while ($row = $result -> fetch_assoc()) { // Loops through all requests and populate the page
+						// print '<script>console.log(\''.json_encode($row).'\')</script>';
 						$requestDescription = $row['description'];
+						// print '<script>console.log(\''.$requestDescription.'\')</script>';
 						if ($requestDescription != "") {
 							$info = json_decode($requestDescription, true);
-
+							// print '<script>console.log(\''.json_encode($info).'\')</script>';
 							$content = $content.'
 							<div class="card mb-3 requestCard">
 								<div class="row no-gutters">
