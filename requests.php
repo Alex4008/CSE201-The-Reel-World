@@ -131,10 +131,16 @@
 											}
 
 											$content = $content.'
-											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
-											<div class="text-right">
-												<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
-											</div>
+											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>';
+
+											if ($row['status'] === 'Submitted') {
+												$content .= '
+												<div class="text-right">
+													<button class="btn btn-secondary cancelButton" requestId="'.$row['requestId'].'">Cancel</button>
+												</div>
+												';
+											} 
+											$content .= '
 										</div>
 									</div>
 								</div>

@@ -145,6 +145,7 @@
 											<p class="card-text">Actors: '.implode(", ", $info['actorToDisplay']).'</p>
 											<p class="card-text">Description: '.$info['movieDescription'].'</p>
 											<p class="card-text">Rating: '.$info['movieRating'].' /10</p>
+											<p class="card-text">IMDB Link: Click <a href="'.$info['imdbLink'].'">here</a></p>
 											<p class="card-text"><small class="text-muted">'.$row['status'].' on '.$row['requestDate'].'</small></p>
 											<div>
 												<form>
