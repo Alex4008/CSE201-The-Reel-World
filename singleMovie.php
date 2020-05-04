@@ -3,7 +3,6 @@
 	session_start();
   $movieManager = new MovieManager($mysqli);
 	$commentManager = new CommentManager($mysqli);
-
 	if (isset($_POST['commentText'])) {
 		$commentManager -> addComment($_POST['userId'], $_POST['movieId'], $_POST['commentText']);
 	}
@@ -157,7 +156,19 @@
 												}
 											?>
 										</b></h5>
-										<textarea class="form-control card-text" rows="1" id="commentText"></textarea>
+                                    <?php
+                                        //Checks if the edit button is set
+                                        if(isset($_POST['editBtn'])) {
+                                        //Creates a text area where the usual post area is
+                                        echo '<textarea class="form-control card-text" rows="1" id="commentText">'.$_POST[$_POST['editBtn']].'</textarea>';
+                                        $commentManager->deleteComment($_POST['editBtn']); //Removes old comment
+                                        unset($_POST['editBtn']); //I tried unsetting the button to get it to execute the
+                                                                  // else statement but after posting the new comment it 
+                                                                  // still prints the text area with the old comment
+                                        } else {
+                                            echo '<textarea class="form-control card-text" rows="1" id="commentText"></textarea>';
+                                        }
+                                  ?>
 						      </div>
 						    </div>
 						  </div>
@@ -166,9 +177,9 @@
 									<div class="text-right">
 										<?php
 											if (isset($_SESSION['loggedIn'])) {
-												echo '<button type="button" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="'.$_SESSION['userId'].'">POST</button>';
+												echo '<button type="submit" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="'.$_SESSION['userId'].'">POST</button>';
 											} else {
-												echo '<button type="button" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="52">POST</button>';
+												echo '<button type="submit" class="btn btn-danger cButton" id="postComment" movieId="'.$movieId.'" userId="52">POST</button>';
 											}
 										?>
 										<button type="reset" class="btn btn-secondary cButton">CANCEL</button>
@@ -178,12 +189,19 @@
 						</div>
 					</form>
 				</div>
+                <?php 
+                // Deletes comment if delete button is pressed
+                if(isset($_POST['deleteBtn'])) {
+                $commentManager->deleteComment($_POST['deleteBtn']);
+                }
+                ?>
 				<div class="commentLine ">
 					<?php
 						$statement = $commentManager -> getCommentsByMovie($movieId); // Gets all comments belonging to this movie
 						$result = $statement -> get_result();
 						$content = '';
 						while ($row = $result->fetch_assoc()) { // Displays all the comments
+                            $mycomment = false;
 							$content .= '
 							<div class="card mb-3">
 								<div class="row no-gutters">
@@ -193,14 +211,40 @@
 									<div class="col-sm-11">
 										<div class="card-body">
 											<h5 class="card-title"><b>';
-											if ($row['displayName'] != "") {
-												$content.= $row['displayName'];
-											} else {
-												$content.= $row['userName'];
-											}
-											$content.= '</b></h5>
-											<p class="card-text">'.$row['commentText'].'</p>
-										</div>
+				            if ($row['displayName'] != "") {
+								$content.= $row['displayName'];
+                                if(isset($_SESSION['loggedIn'])) {
+                                    if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
+                                    $mycomment = true; // Checks if the logged in user is an admin or owns the comment
+                                }
+				            } else {
+								$content.= $row['userName'];
+                                if(isset($_SESSION['loggedIn'])) {
+                                    if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
+                                    $mycomment = true;
+                                }
+                                }
+								$content.= '</b></h5>
+											<p class="card-text">'.$row['commentText'].'</p>';
+                            if($mycomment) {
+                                // If the owner is logged in then they can edit and delete comments. If the logged in user
+                                // is an admin then they can delete any comment
+                                $comment[$row['commentId']] = $row['commentText'];
+                                $content.= '<div class="row">
+								                <div class="col">
+									                 <div class="text-right">
+                                                            <form method="post">';
+                                                            if ($row['userName'] == $_SESSION['userName']) {
+                                                            $content .= '<button class="btn btn-secondary cButton" type="submit" value="'.$row['commentId'].'" name="editBtn">Edit</button>';
+                                                            }
+                                                            $content .= '<input type="hidden" name="'.$row['commentId'].'" value="'.$row['commentText'].'">
+                                                            <button class="btn btn-danger cButton" type="submit" value="'.$row['commentId'].'" name="deleteBtn">Delete</button>
+                                                            </form>
+                                                     </div>
+                                                </div>
+							                </div>';
+                            }
+				             $content.='</div>
 									</div>
 								</div>
 							</div>
