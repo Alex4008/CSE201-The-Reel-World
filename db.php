@@ -89,7 +89,7 @@ final class MovieManager
 		// Gets all checked genres from filter form
     public function getCheckedGenres($genreList) {
 
-        $sql = "SELECT MAX(m.title), m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
+        $sql = "SELECT m.title, m.description, m.keywords, m.imdbLink, m.image, m.imageAddress, m.rating, m.isDeleted, GROUP_CONCAT(g.description) genre, (SELECT GROUP_CONCAT(a.actorName) FROM Actors a JOIN ActorMovie am ON am.actorId = a.actorId WHERE am.movieId = m.movieId) AS actors , g.isDeleted gDeleted
         FROM Movies m
         JOIN GenreMovie gm ON m.movieId = gm.movieId
         JOIN Genres g ON g.genreId = gm.genreId
@@ -178,7 +178,7 @@ final class UserManager
 		//Checks to ensure that the userName is not used yet (i.e. available)
 		public function checkUsername($userName) {
             $returnVal = false;
-            
+
 			$sql = "SELECT userId FROM Users WHERE userName = '".$userName."';";
 			if (!($statement = $this->mysqli->prepare($sql))) {
 					echo "prepare fail" . $mysqli->error;
@@ -188,7 +188,7 @@ final class UserManager
 			$statement -> execute();
 			$result = $statement->get_result();
 			echo $result-> num_rows;
-            
+
             if ($result->num_rows == 0)
                 $returnVal = true;
             return $returnVal;
