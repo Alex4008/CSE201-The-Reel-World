@@ -60,7 +60,7 @@ final class MovieManagerTest extends TestCase
         );
     }
     
-    // Testing if getAllGenres() returns all 24 genres
+    // Testing if getAllGenres() returns all 25 genres
     // Assumes there are 24 genres in the database  
     public function testCanGetAllGenres(): void
     {
@@ -69,7 +69,7 @@ final class MovieManagerTest extends TestCase
         $result = $statement->store_result();
         
         $this->assertEquals(
-            24,
+            25,
             $statement->num_rows
         );
     }
@@ -89,7 +89,7 @@ final class MovieManagerTest extends TestCase
     }
     
     // Testing if getCheckedGenres() can get movies of a genre when movies of that genre exist
-    // Assumes there are 3 movies with genre 'romance' 
+    // Assumes there are 5 movies with genre 'romance' 
     public function testCanGetMatchedGenres(): void
     {
         $mm = new MovieManager($GLOBALS['mysqli']);
@@ -97,7 +97,7 @@ final class MovieManagerTest extends TestCase
         $result = $statement->store_result();
         
         $this->assertEquals(
-            3,
+            5,
             $statement->num_rows
         );
     }
