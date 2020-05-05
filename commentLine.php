@@ -24,13 +24,13 @@
           if ($row['displayName'] != "") {
       $content.= $row['displayName'];
                       if(isset($_SESSION['loggedIn'])) {
-                          if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
+                          if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Moderator')
                           $mycomment = true; // Checks if the logged in user is an admin or owns the comment
                       }
           } else {
       $content.= $row['userName'];
                       if(isset($_SESSION['loggedIn'])) {
-                          if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
+                          if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Moderator')
                           $mycomment = true;
                       }
                       }
