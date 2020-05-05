@@ -178,7 +178,7 @@ final class UserManager
 		//Checks to ensure that the userName is not used yet (i.e. available)
 		public function checkUsername($userName) {
             $returnVal = false;
-            
+
 			$sql = "SELECT userId FROM Users WHERE userName = '".$userName."';";
 			if (!($statement = $this->mysqli->prepare($sql))) {
 					echo "prepare fail" . $mysqli->error;
@@ -188,7 +188,7 @@ final class UserManager
 			$statement -> execute();
 			$result = $statement->get_result();
 			echo $result-> num_rows;
-            
+
             if ($result->num_rows == 0)
                 $returnVal = true;
             return $returnVal;
@@ -330,14 +330,14 @@ final class CommentManager
 		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
 		}
 	}
-    
+
     /**
 	Deletes comments for the specified movie
 	*/
 	public function deleteComment($commentId) {
 		$sql = "DELETE FROM Comments WHERE commentId=".$commentId."";
 		if ($this->mysqli->query($sql) === TRUE) {
-            echo $commentid;
+            // echo $commentId;
 		} else {
 		    echo "Error: " . $sql . "<br>" . $this->mysqli->error;
 		}

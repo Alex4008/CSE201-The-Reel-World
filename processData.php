@@ -5,6 +5,7 @@
   $userManager = new UserManager($mysqli);
   $genreManager = new GenreManager($mysqli);
   $actorManager = new ActorManager($mysqli);
+  $commentManager = new CommentManager($mysqli);
   session_start();
 ?>
 
@@ -94,4 +95,8 @@
     $requestManager->updateRequest($requestId, json_encode($data), 'Declined'); // Set request status to Declined
     echo json_encode($data);
   }
+
+  if (isset($_POST['commentText'])) {
+		$commentManager -> addComment($_POST['userId'], $_POST['movieId'], $_POST['commentText']);
+	}
 ?>

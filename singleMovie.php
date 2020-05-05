@@ -3,9 +3,6 @@
 	session_start();
   $movieManager = new MovieManager($mysqli);
 	$commentManager = new CommentManager($mysqli);
-	if (isset($_POST['commentText'])) {
-		$commentManager -> addComment($_POST['userId'], $_POST['movieId'], $_POST['commentText']);
-	}
 ?>
 <!-- Guest user ID is 52 -->
 <!DOCTYPE html>
@@ -33,6 +30,7 @@
 	<script src="sanitize.js"></script>
 	<script type="text/javascript">
 		$(function() {
+			$('.commentLine').load('./commentLine.php');
 			$('#postComment').on('click', function() {
 				let userId = $(this).attr('userId');
 				let movieId = $(this).attr('movieId');
@@ -42,7 +40,7 @@
 				console.log(commentText);
 
 				$.ajax({
-					url: './singleMovie.php',
+					url: './processData.php',
 					type: 'POST',
 					data: {
 						movieId: movieId,
@@ -50,7 +48,10 @@
 						commentText: commentText
 					},
 					success: function(data) {
-						location.reload();
+						console.log(data);
+						$('#commentText').val("");
+						$('#commentText').text("");
+						$('.commentLine').load('./commentLine.php');
 					}
 				});
 			});
@@ -75,7 +76,7 @@
 					<a class="nav-link navTab" href="requests.php">My Requests</a>
 				</li>
 				<?php
-					if ($_SESSION['loggedIn'] && $_SESSION['role'] == 'Admin') {
+					if (isset($_SESSION['loggedIn']) && $_SESSION['role'] == 'Admin') {
 						$item = '
 						<li class="nav-item">
 							<a class="nav-link navTab" href="pendingRequests.php">Pending Requests</a>
@@ -109,12 +110,12 @@
 				$statement = $movieManager->getSingleMovie($_REQUEST['title']); //This runs the function from the db.php file and returns the MySQL statement results.
 				//print('<script>console.log("'.json_encode($statement, JSON_HEX_TAG).'");</script>');
 			  $result = $statement->get_result(); // Gets the results from the query
-				$movieId = null;
 			  while ($row = $result->fetch_assoc()) {
 			    print '<h1>' . $row['title'] . '</h1>';
 			    print '<p>Actors: ' . $row['actors'] . '</p>';
 			    print '<p>Description: ' . $row['description'] . '</p>';
 					$movieId = $row['movieId'];
+					$_SESSION['singleMovieId'] = $movieId;
 			  }
 			?>
 			</div>
@@ -162,8 +163,8 @@
                                         //Creates a text area where the usual post area is
                                         echo '<textarea class="form-control card-text" rows="1" id="commentText">'.$_POST[$_POST['editBtn']].'</textarea>';
                                         $commentManager->deleteComment($_POST['editBtn']); //Removes old comment
-                                        unset($_POST['editBtn']); //I tried unsetting the button to get it to execute the
-                                                                  // else statement but after posting the new comment it 
+                                        // unset($_POST['editBtn']); //I tried unsetting the button to get it to execute the
+                                                                  // else statement but after posting the new comment it
                                                                   // still prints the text area with the old comment
                                         } else {
                                             echo '<textarea class="form-control card-text" rows="1" id="commentText"></textarea>';
@@ -189,69 +190,14 @@
 						</div>
 					</form>
 				</div>
-                <?php 
+                <?php
                 // Deletes comment if delete button is pressed
                 if(isset($_POST['deleteBtn'])) {
                 $commentManager->deleteComment($_POST['deleteBtn']);
                 }
                 ?>
-				<div class="commentLine ">
-					<?php
-						$statement = $commentManager -> getCommentsByMovie($movieId); // Gets all comments belonging to this movie
-						$result = $statement -> get_result();
-						$content = '';
-						while ($row = $result->fetch_assoc()) { // Displays all the comments
-                            $mycomment = false;
-							$content .= '
-							<div class="card mb-3">
-								<div class="row no-gutters">
-									<div class="col-sm-1">
-										<img src="https://api.adorable.io/avatars/200/'.$row['userName'].'" class="card-img" alt="'.$row['userName'].'">
-									</div>
-									<div class="col-sm-11">
-										<div class="card-body">
-											<h5 class="card-title"><b>';
-				            if ($row['displayName'] != "") {
-								$content.= $row['displayName'];
-                                if(isset($_SESSION['loggedIn'])) {
-                                    if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
-                                    $mycomment = true; // Checks if the logged in user is an admin or owns the comment
-                                }
-				            } else {
-								$content.= $row['userName'];
-                                if(isset($_SESSION['loggedIn'])) {
-                                    if($row['userName'] == $_SESSION['userName'] || $_SESSION['role'] == 'Admin')
-                                    $mycomment = true;
-                                }
-                                }
-								$content.= '</b></h5>
-											<p class="card-text">'.$row['commentText'].'</p>';
-                            if($mycomment) {
-                                // If the owner is logged in then they can edit and delete comments. If the logged in user
-                                // is an admin then they can delete any comment
-                                $comment[$row['commentId']] = $row['commentText'];
-                                $content.= '<div class="row">
-								                <div class="col">
-									                 <div class="text-right">
-                                                            <form method="post">';
-                                                            if ($row['userName'] == $_SESSION['userName']) {
-                                                            $content .= '<button class="btn btn-secondary cButton" type="submit" value="'.$row['commentId'].'" name="editBtn">Edit</button>';
-                                                            }
-                                                            $content .= '<input type="hidden" name="'.$row['commentId'].'" value="'.$row['commentText'].'">
-                                                            <button class="btn btn-danger cButton" type="submit" value="'.$row['commentId'].'" name="deleteBtn">Delete</button>
-                                                            </form>
-                                                     </div>
-                                                </div>
-							                </div>';
-                            }
-				             $content.='</div>
-									</div>
-								</div>
-							</div>
-							';
-						}
-						print $content;
-					?>
+				<div class="commentLine">
+
 				</div>
 			</div>
 		</div>
