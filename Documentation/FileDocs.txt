@@ -1,0 +1,40 @@
+Descriptions of file contents (alphabetical order)
+
+CSE201-The-Reel-World
+	addrequest.js - script to add forms based on input
+	addrequest.php - php to process requests
+	build-script.sh - build script to add repository to workstation
+	commentLine.php - moderator capabilities for comment deletion
+	composer.json - test case confirmation of class map
+	composer.lock - test dependency handling
+	db.php - includes database connection and queries
+	Documentation (dir) - project information docs
+		FileDocs.txt - describes eacy file currently in the repository
+		ProjectStatement.docx - project goal and summary description
+		UseDescription - describes how to use web app based on user access level
+	fav.ico - tab icon for browser
+	index.php - home page of our site depicting movie block and functionality options
+	login.php - script for login information
+	MovieCatalog - visual database schema
+	MovieCatalogBasicQueries.sql - sql queries
+	MovieCatalogDummyData2.sql - 2 dummy data insertion tests
+	MovieCatalogDummyData.sql - dummy data insertion
+	MovieCatalogModified2.sql - modified database with admin
+	MovieCatalogModified.sql - modified database
+	MovieCatalog.sql - sql movie database
+	multiselect-plugin (dir) - standard
+	password.php - db connection information
+	pendingRequests.php - pending request admin functionality
+	phpunit.xml - unit test suite creation
+	processData.php - login and request handling
+	README.md - project team member introduction
+	requests.php - request form pages and functions
+	sanitize.js - cleans user input
+	signup.php - depicts the sign up option to store signed up user in the database
+	singleMovie.php - standard page layout for a single movie option
+	tests (dir) - holds test documents
+		CommentManagerTest.php - unit tests for CommentManager class
+		MovieManagerTest.php - unit tests for the MovieManager class
+		RequestManagerTest.php - unit tests for the RequestManager class
+		UserManagerTest.php - unit tests for the UserManager class
+	vendor (dir) - hold phpunit information
