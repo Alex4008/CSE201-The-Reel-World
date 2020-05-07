@@ -216,7 +216,7 @@ while($row = $result->fetch_assoc()) {
 		// Build card
 		print '<div class="card col-md movie" movieId="'.$row['movieId'].'" style="margin:5px;padding:0px;border-color:white;">';
 		print '<a href= "singleMovie.php?title=' . $row['title'].'">';
-		print '<img src="' . $row['imageAddress'] . '" width="190px" height="275px" class="card-img-top" alt="' . $row['title'] . '">';
+		print '<img src="' . $row['imageAddress'] . '" width="190px" height="300px" class="card-img-top" alt="' . $row['title'] . '">';
 		print '</a>';
 
 		print '<div class="card-body">';
